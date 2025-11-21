@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>تطبيق حساب مستودع بسيط</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+    body { font-family: 'Cairo', sans-serif; }
+    .table-fixed { table-layout: fixed; }
+    .rtl-input { direction: rtl; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4">
+  <div class="max-w-6xl mx-auto">
+    <header class="mb-4">
+      <h1 class="text-2xl font-bold text-center">تطبيق حساب مستودع بسيط</h1>
+      <p class="text-sm text-center text-gray-600">قوائم: إدخال - إخراج - إدارة أصناف - مخزون يومي - جرد</p>
+    </header>
+
+    <nav class="flex gap-2 justify-center mb-4">
+      <button class="tab-btn px-3 py-2 bg-white rounded shadow-sm" data-tab="products">إدارة الأصناف</button>
+      <button class="tab-btn px-3 py-2 bg-white rounded shadow-sm" data-tab="receipts">قائمة الإدخال</button>
+      <button class="tab-btn px-3 py-2 bg-white rounded shadow-sm" data-tab="issues">قائمة الإخراج</button>
+      <button class="tab-btn px-3 py-2 bg-white rounded shadow-sm" data-tab="inventory">المخزون اليومي</button>
+      <button class="tab-btn px-3 py-2 bg-white rounded shadow-sm" data-tab="stocktake">جرد شهري</button>
+      <button class="px-3 py-2 bg-green-500 text-white rounded" id="exportAll">تصدير CSV للجميع</button>
+    </nav>
+
+    <main class="bg-white p-4 rounded shadow">
+      <!-- إدارة الأصناف -->
+      <section class="tab-content" id="products" hidden>
+        <h2 class="text-lg font-semibold mb-2">إدارة الأصناف</h2>
+        <form id="productForm" class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-3">
+          <input required placeholder="رقم الصنف (SKU)" id="p_sku" class="rtl-input p-2 border rounded"/>
+          <input required placeholder="اسم الصنف" id="p_name" class="rtl-input p-2 border rounded"/>
+          <input placeholder="وحدة القياس" id="p_unit" class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="سعر التكلفة" id="p_cost" class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="سعر البيع" id="p_price" class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="الحد الأدنى" id="p_min" class="rtl-input p-2 border rounded"/>
+          <input placeholder="ملاحظات" id="p_notes" class="rtl-input p-2 border rounded md:col-span-2"/>
+          <button class="bg-blue-600 text-white rounded px-3 py-2" type="submit">حفظ الصنف</button>
+        </form>
+        <div class="overflow-x-auto">
+          <table class="w-full table-fixed text-sm">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="p-2">SKU</th><th class="p-2">الاسم</th><th class="p-2">الوحدة</th>
+                <th class="p-2">تكلفة</th><th class="p-2">سعر بيع</th><th class="p-2">حد أدنى</th><th class="p-2">أفعال</th>
+              </tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- بقية الأقسام (مختصرة) -->
+      <section class="tab-content" id="receipts" hidden>
+        <h2 class="text-lg font-semibold mb-2">قائمة الإدخال</h2>
+        <form id="receiptForm" class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-3">
+          <input type="date" id="r_date" required class="p-2 border rounded"/>
+          <input placeholder="اسم المورد" id="r_supplier" required class="rtl-input p-2 border rounded"/>
+          <input placeholder="رقم الفاتورة" id="r_invoice" class="rtl-input p-2 border rounded"/>
+          <select id="r_sku" class="p-2 border rounded"></select>
+          <input type="number" step="0.01" placeholder="سعر التكلفة" id="r_cost" required class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="الكمية" id="r_qty" required class="rtl-input p-2 border rounded"/>
+          <input placeholder="ملاحظات" id="r_notes" class="rtl-input p-2 border rounded md:col-span-3"/>
+          <button class="bg-blue-600 text-white rounded px-3 py-2" type="submit">تسجيل الاستلام</button>
+        </form>
+        <table class="w-full text-sm table-fixed"><thead class="bg-gray-100"><tr>
+          <th class="p-2">تاريخ</th><th class="p-2">مورد</th><th class="p-2">فاتورة</th>
+          <th class="p-2">الصنف</th><th class="p-2">كمية</th><th class="p-2">تكلفة</th><th class="p-2">ملاحظات</th>
+        </tr></thead><tbody id="receiptsTable"></tbody></table>
+      </section>
+
+      <section class="tab-content" id="issues" hidden>
+        <h2 class="text-lg font-semibold mb-2">قائمة الإخراج</h2>
+        <form id="issueForm" class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-3">
+          <input type="date" id="i_date" required class="p-2 border rounded"/>
+          <input placeholder="اسم العميل/الجهة" id="i_client" required class="rtl-input p-2 border rounded"/>
+          <input placeholder="رقم الفاتورة/سند" id="i_doc" class="rtl-input p-2 border rounded"/>
+          <select id="i_sku" class="p-2 border rounded"></select>
+          <input type="number" step="0.01" placeholder="سعر التكلفة" id="i_cost" required class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="الكمية" id="i_qty" required class="rtl-input p-2 border rounded"/>
+          <input placeholder="ملاحظات" id="i_notes" class="rtl-input p-2 border rounded md:col-span-3"/>
+          <button class="bg-red-600 text-white rounded px-3 py-2" type="submit">تسجيل الصرف</button>
+        </form>
+        <table class="w-full text-sm table-fixed"><thead class="bg-gray-100"><tr>
+          <th class="p-2">تاريخ</th><th class="p-2">جهة</th><th class="p-2">مستند</th>
+          <th class="p-2">الصنف</th><th class="p-2">كمية</th><th class="p-2">تكلفة</th><th class="p-2">ملاحظات</th>
+        </tr></thead><tbody id="issuesTable"></tbody></table>
+      </section>
+
+      <section class="tab-content" id="inventory" hidden>
+        <h2 class="text-lg font-semibold mb-2">المخزون اليومي</h2>
+        <div class="mb-3 flex gap-2">
+          <button id="refreshInv" class="px-3 py-2 bg-blue-600 text-white rounded">تحديث المخزون</button>
+          <button id="printInv" class="px-3 py-2 bg-gray-700 text-white rounded">طباعة التقرير</button>
+        </div>
+        <table class="w-full text-sm table-fixed"><thead class="bg-gray-100"><tr>
+          <th class="p-2">SKU</th><th class="p-2">الاسم</th><th class="p-2">الرصيد</th>
+          <th class="p-2">وحدة</th><th class="p-2">تكلفة وحدة</th><th class="p-2">قيمة المخزون</th>
+        </tr></thead><tbody id="inventoryTable"></tbody></table>
+      </section>
+
+      <section class="tab-content" id="stocktake" hidden>
+        <h2 class="text-lg font-semibold mb-2">جرد شهري مختصر</h2>
+        <form id="stocktakeForm" class="grid grid-cols-1 md:grid-cols-6 gap-2 mb-3">
+          <select id="st_sku" class="p-2 border rounded"><option value="">-- اختر صنف --</option></select>
+          <input type="number" step="0.01" placeholder="رصيد النظام" id="st_system" readonly class="rtl-input p-2 border rounded"/>
+          <input type="number" step="0.01" placeholder="الكمية المحسوبة" id="st_counted" required class="rtl-input p-2 border rounded"/>
+          <select id="st_reason" class="p-2 border rounded">
+            <option value="نقص">نقص</option><option value="زيادة">زيادة</option><option value="تالف">تالف</option><option value="خطأ">خطأ</option>
+          </select>
+          <input placeholder="ملاحظات" id="st_notes" class="rtl-input p-2 border rounded md:col-span-2"/>
+          <button class="bg-yellow-600 text-white rounded px-3 py-2" type="submit">تسجيل الجرد</button>
+        </form>
+        <table class="w-full text-sm table-fixed"><thead class="bg-gray-100"><tr>
+          <th class="p-2">SKU</th><th class="p-2">رصيد النظام</th><th class="p-2">الرصيد المحسوب</th>
+          <th class="p-2">الفرق</th><th class="p-2">السبب</th><th class="p-2">ملاحظات</th>
+        </tr></thead><tbody id="stocktakeTable"></tbody></table>
+      </section>
+    </main>
+
+    <footer class="text-center text-sm text-gray-600 mt-4">نسخة بسيطة للطباعة والمراجعة — حفظ محلي (localStorage)</footer>
+  </div>
+
+  <script>
+    // ------------- State & Helpers -------------
+    const state = {
+      products: JSON.parse(localStorage.getItem('products')||'[]'),
+      receipts: JSON.parse(localStorage.getItem('receipts')||'[]'),
+      issues  : JSON.parse(localStorage.getItem('issues')||'[]'),
+      stocktakes: JSON.parse(localStorage.getItem('stocktakes')||'[]')
+    };
+    function save(){
+      localStorage.setItem('products', JSON.stringify(state.products));
+      localStorage.setItem('receipts', JSON.stringify(state.receipts));
+      localStorage.setItem('issues', JSON.stringify(state.issues));
+      localStorage.setItem('stocktakes', JSON.stringify(state.stocktakes));
+    }
+    function $(id){return document.getElementById(id)}
+
+    // ------------- Tabs -------------
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-content').forEach(t=>t.hidden=true);
+        $(btn.dataset.tab).hidden=false;
+      });
+    });
+    document.querySelector('.tab-btn[data-tab="products"]').click();
+
+    // ------------- دوال حسابية ومساعدة -------------
+    function computeInventory(){
+      const map={};
+      state.products.forEach(p=> map[p.sku]={sku:p.sku,name:p.name,unit:p.unit,cost:parseFloat(p.cost||0),qty:0});
+      state.receipts.forEach(r=>{
+        if(!map[r.sku]) map[r.sku]={sku:r.sku,name:'غير معروف',unit:'',cost:parseFloat(r.cost||0),qty:0};
+        map[r.sku].qty += parseFloat(r.qty||0);
+        if(r.cost) map[r.sku].cost = parseFloat(r.cost);
+      });
+      state.issues.forEach(i=>{
+        if(!map[i.sku]) map[i.sku]={sku:i.sku,name:'غير معروف',unit:'',cost:parseFloat(i.cost||0),qty:0};
+        map[i.sku].qty -= parseFloat(i.qty||0);
+      });
+      return Object.values(map);
+    }
+    function toCSV(rows,header){
+      const esc=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+      return [header.map(esc).join(','), ...rows.map(r=>header.map(h=>esc(r[h])).join(','))].join('\n');
+    }
+    function downloadText(filename,text){
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));
+      a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    // ------------- عرض البيانات -------------
+    function populateSKUSelects(){
+      const selects=['r_sku','i_sku','st_sku'];
+      selects.forEach(id=>{
+        const sel=$(id); if(!sel)return;
+        sel.innerHTML='<option value="">-- اختر صنف --</option>'
+          + state.products.map(p=>`<option value="${p.sku}">${p.sku} — ${p.name}</option>`).join('');
+      });
+      $('st_sku').addEventListener('change',()=>{
+        const sku=$('st_sku').value;
+        const inv=computeInventory();
+        const row=inv.find(r=>r.sku===sku);
+        $('st_system').value=row?row.qty:0;
+      });
+    }
+    function renderProducts(){
+      const tb=$('productsTable'); tb.innerHTML='';
+      state.products.forEach((p,i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="p-2">${p.sku}</td><td class="p-2">${p.name}</td><td class="p-2">${p.unit||''}</td>
+          <td class="p-2">${p.cost||0}</td><td class="p-2">${p.price||''}</td><td class="p-2">${p.min||''}</td>
+          <td class="p-2"><button data-i="${i}" class="edit-prod px-2 py-1 bg-yellow-300 rounded">تعديل</button>
+          <button data-i="${i}" class="del-prod px-2 py-1 bg-red-400 text-white rounded">حذف</button></td>`;
+        tb.appendChild(tr);
+      });
+      populateSKUSelects();
+    }
+    function renderReceipts(){
+      const tb=$('receiptsTable'); tb.innerHTML='';
+      state.receipts.forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="p-2">${r.date}</td><td class="p-2">${r.supplier}</td><td class="p-2">${r.invoice||''}</td>
+          <td class="p-2">${r.sku}</td><td class="p-2">${r.qty}</td><td class="p-2">${r.cost}</td><td class="p-2">${r.notes||''}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+    function renderIssues(){
+      const tb=$('issuesTable'); tb.innerHTML='';
+      state.issues.forEach(i=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="p-2">${i.date}</td><td class="p-2">${i.client}</td><td class="p-2">${i.doc||''}</td>
+          <td class="p-2">${i.sku}</td><td class="p-2">${i.qty}</td><td class="p-2">${i.cost}</td><td class="p-2">${i.notes||''}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+    function renderInventory(){
+      const tb=$('inventoryTable'); tb.innerHTML='';
+      computeInventory().forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="p-2">${r.sku}</td><td class="p-2">${r.name}</td><td class="p-2">${r.qty}</td>
+          <td class="p-2">${r.unit||''}</td><td class="p-2">${r.cost||0}</td><td class="p-2">${(r.qty*r.cost).toFixed(2)}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+    function renderStocktakes(){
+      const tb=$('stocktakeTable'); tb.innerHTML='';
+      state.stocktakes.forEach(s=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td class="p-2">${s.sku}</td><td class="p-2">${s.system}</td><td class="p-2">${s.counted}</td>
+          <td class="p-2">${(s.counted-s.system).toFixed(2)}</td><td class="p-2">${s.reason}</td><td class="p-2">${s.notes||''}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+
+    // ------------- معالجات الأحداث -------------
+    $('productForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const p={
+        sku:$('p_sku').value.trim(), name:$('p_name').value.trim(), unit:$('p_unit').value.trim(),
+        cost:parseFloat($('p_cost').value||0), price:parseFloat($('p_price').value||0),
+        min:$('p_min').value, notes:$('p_notes').value
+      };
+      const idx=state.products.findIndex(x=>x.sku===p.sku);
+      idx>=0? state.products[idx]=p : state.products.push(p);
+      save(); renderProducts(); renderInventory();
+      $('productForm').reset();
+    });
+    document.addEventListener('click',e=>{
+      if(e.target.classList.contains('edit-prod')){
+        const i=+e.target.dataset.i, p=state.products[i];
+        $('p_sku').value=p.sku; $('p_name').value=p.name; $('p_unit').value=p.unit;
+        $('p_cost').value=p.cost; $('p_price').value=p.price; $('p_min').value=p.min; $('p_notes').value=p.notes;
+      }
+      if(e.target.classList.contains('del-prod')){
+        const i=+e.target.dataset.i;
+        if(confirm('حذف الصنف؟')){ state.products.splice(i,1); save(); renderProducts(); renderInventory(); }
+      }
+    });
+    $('receiptForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const r={date:$('r_date').value, supplier:$('r_supplier').value.trim(), invoice:$('r_invoice').value.trim(),
+               sku:$('r_sku').value, cost:parseFloat($('r_cost').value||0), qty:parseFloat($('r_qty').value||0), notes:$('r_notes').value};
+      state.receipts.push(r); save(); renderReceipts(); renderInventory(); $('receiptForm').reset();
+    });
+    $('issueForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const i={date:$('i_date').value, client:$('i_client').value.trim(), doc:$('i_doc').value.trim(),
+               sku:$('i_sku').value, cost:parseFloat($('i_cost').value||0), qty:parseFloat($('i_qty').value||0), notes:$('i_notes').value};
+      state.issues.push(i); save(); renderIssues(); renderInventory(); $('issueForm').reset();
+    });
+    $('stocktakeForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const s={sku:$('st_sku').value, system:parseFloat($('st_system').value||0), counted:parseFloat($('st_counted'.value||0)),
+               reason:$('st_reason').value, notes:$('st_notes').value};
+      state.stocktakes.push(s); save(); renderStocktakes(); $('stocktakeForm').reset();
+    });
+    $('exportAll').addEventListener('click',()=>{
+      downloadText('products.csv', toCSV(state.products,['sku','name','unit','cost','price','min','notes']));
+      downloadText('receipts.csv', toCSV(state.receipts,['date','supplier','invoice','sku','qty','cost','notes']));
+      downloadText('issues.csv', toCSV(state.issues,['date','client','doc','sku','qty','cost','notes']));
+      downloadText('stocktakes.csv', toCSV(state.stocktakes,['sku','system','counted','reason','notes']));
+    });
+    $('printInv').addEventListener('click',()=>{
+      const inv=computeInventory();
+      const w=window.open('','_blank');
+      const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير المخزون</title>
+        <style>body{font-family:Arial,Helvetica,sans-serif;direction:rtl}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:6px;text-align:center}</style>
+        </head><body><h2>تقرير المخزون</h2><table>
+        <tr><th>SKU</th><th>الاسم</th><th>الرصيد</th><th>الوحدة</th><th>تكلفة الوحدة</th><th>قيمة</th></tr>`
+        + inv.map(r=>`<tr><td>${r.sku}</td><td>${r.name}</td><td>${r.qty}</td><td>${r.unit||''}</td><td>${r.cost||0}</td><td>${(r.qty*r.cost).toFixed(2)}</td></tr>`).join('')
+        +`</table></body></html>`;
+      w.document.write(html); w.document.close();
+    });
+    $('refreshInv').addEventListener('click',renderInventory);
+
+    // ------------- تشغيل أولي -------------
+    renderProducts(); renderReceipts(); renderIssues(); renderInventory(); renderStocktakes();
+  </script>
+</body>
+</html>
