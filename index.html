@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WMS Pro - نظام المستودعات</title>
+    <title>WMS Pro - تسجيل الدخول</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,7 +20,6 @@
             --sidebar-width: 260px;
         }
 
-        /* Dark Mode Variables */
         [data-theme="dark"] {
             --primary-color: #1a1a1a;
             --secondary-color: #2d2d2d;
@@ -35,9 +34,42 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             overflow-x: hidden;
-            transition: background-color 0.3s, color 0.3s;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* --- LOGIN PAGE STYLES --- */
+        #login-interface {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .login-logo {
+            font-size: 4rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        /* --- APP STYLES --- */
+        #app-interface { display: none; height: 100%; }
+        
         /* Sidebar */
         .sidebar {
             height: 100vh;
@@ -47,127 +79,48 @@
             background-color: var(--primary-color);
             color: white;
             padding-top: 20px;
-            transition: all 0.3s;
-            z-index: 1000;
-            /* Default RTL positioning */
-            right: 0; 
-            border-left: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* LTR Sidebar Fix */
-        html[dir="ltr"] .sidebar {
-            right: auto;
-            left: 0;
-            border-left: none;
-            border-right: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            padding: 12px 25px;
-            text-decoration: none;
-            font-size: 16px;
-            color: #ecf0f1;
-            display: block;
             transition: 0.3s;
-            border-right: 4px solid transparent;
+            z-index: 1000;
+            right: 0; 
+            display: flex;
+            flex-direction: column;
         }
+        html[dir="ltr"] .sidebar { right: auto; left: 0; }
+
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-menu { flex-grow: 1; overflow-y: auto; }
         
-        html[dir="ltr"] .sidebar a {
-            border-right: none;
-            border-left: 4px solid transparent;
+        .sidebar a {
+            padding: 12px 25px; text-decoration: none; font-size: 16px; color: #ecf0f1;
+            display: block; transition: 0.3s; border-right: 4px solid transparent;
         }
-
-        .sidebar a:hover, .sidebar a.active {
-            background-color: var(--secondary-color);
-            border-right-color: var(--accent-color); /* RTL */
-            color: white;
-        }
-
-        html[dir="ltr"] .sidebar a:hover, html[dir="ltr"] .sidebar a.active {
-            border-right-color: transparent;
-            border-left-color: var(--accent-color);
-        }
-
+        html[dir="ltr"] .sidebar a { border-right: none; border-left: 4px solid transparent; }
+        
+        .sidebar a:hover, .sidebar a.active { background-color: var(--secondary-color); border-color: var(--accent-color); color: white; }
         .sidebar i { margin-inline-end: 10px; width: 25px; text-align: center; }
 
-        /* Main Content */
+        /* Content */
         .main-content {
-            margin-right: var(--sidebar-width); /* RTL Default */
-            padding: 30px;
-            transition: all 0.3s;
+            margin-right: var(--sidebar-width); padding: 30px; transition: 0.3s; width: 100%;
         }
+        html[dir="ltr"] .main-content { margin-right: 0; margin-left: var(--sidebar-width); }
 
-        html[dir="ltr"] .main-content {
-            margin-right: 0;
-            margin-left: var(--sidebar-width);
-        }
-
-        /* Cards & UI */
-        .card {
-            border: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border-radius: 12px;
-            background-color: var(--card-bg);
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: rgba(0,0,0,0.02);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding: 15px 20px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-        
-        .form-control, .form-select {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-        
-        .form-control:focus {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        .table { color: var(--text-color); }
-        .table th { background-color: rgba(0,0,0,0.05); color: var(--text-color); }
-        .table td { border-color: rgba(0,0,0,0.05); }
-
-        /* Summary Boxes */
-        .summary-box {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-right: 4px solid var(--accent-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .card { border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 12px; background-color: var(--card-bg); margin-bottom: 20px; }
+        .summary-box { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-right: 4px solid var(--accent-color); }
         html[dir="ltr"] .summary-box { border-right: none; border-left: 4px solid var(--accent-color); }
-        
-        .summary-box h3 { font-size: 2rem; margin: 0; color: var(--text-color); }
-        .summary-box p { margin: 0; color: #7f8c8d; }
 
-        /* Mobile */
+        /* Accordion for Help */
+        .accordion-button:not(.collapsed) { background-color: rgba(52, 152, 219, 0.1); color: var(--accent-color); }
+        
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar { margin-right: calc(-1 * var(--sidebar-width)); }
             html[dir="ltr"] .sidebar { margin-left: calc(-1 * var(--sidebar-width)); margin-right: 0; }
-            
             .sidebar.active { margin-right: 0; }
             html[dir="ltr"] .sidebar.active { margin-left: 0; }
-            
-            .main-content { margin-right: 0; margin-left: 0 !important; }
+            .main-content { margin-right: 0 !important; margin-left: 0 !important; }
         }
-
+        
         .section { display: none; animation: fadeIn 0.3s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -175,628 +128,377 @@
 </head>
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h4><i class="fa-solid fa-boxes-stacked"></i> <span data-i18n="app_title">المستودع الذكي</span></h4>
-        </div>
-        <a href="#" onclick="navTo('dashboard', this)" class="active"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_dash">لوحة التحكم</span></a>
-        <a href="#" onclick="navTo('items', this)"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_items">إدارة الأصناف</span></a>
-        <a href="#" onclick="navTo('inbound', this)"><i class="fa-solid fa-dolly"></i> <span data-i18n="nav_in">دخول بضاعة</span></a>
-        <a href="#" onclick="navTo('outbound', this)"><i class="fa-solid fa-truck-ramp-box"></i> <span data-i18n="nav_out">صرف بضاعة</span></a>
-        <a href="#" onclick="navTo('stock', this)"><i class="fa-solid fa-warehouse"></i> <span data-i18n="nav_stock">المخزون</span></a>
-        <a href="#" onclick="navTo('reports', this)"><i class="fa-solid fa-file-invoice"></i> <span data-i18n="nav_reports">التقارير</span></a>
-        
-        <hr style="border-color: rgba(255,255,255,0.1)">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#settingsModal"><i class="fa-solid fa-gear"></i> <span data-i18n="nav_settings">الإعدادات</span></a>
-    </div>
-
-    <div class="main-content" id="mainContent">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <button class="btn btn-primary d-md-none" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-            <h3 id="pageTitle" data-i18n="dashboard_title">لوحة المعلومات</h3>
-            <div>
-                <span class="badge bg-secondary p-2" id="clock"></span>
-            </div>
-        </div>
-
-        <div id="dashboard" class="section active">
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="summary-box">
-                        <div><h3 id="d_items">0</h3><p data-i18n="d_items_label">الأصناف</p></div>
-                        <i class="fa-solid fa-cubes fa-2x opacity-25"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="summary-box" style="border-color: #27ae60 !important;">
-                        <div><h3 id="d_val">0</h3><p data-i18n="d_val_label">قيمة المخزون</p></div>
-                        <i class="fa-solid fa-wallet fa-2x opacity-25"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="summary-box" style="border-color: #e74c3c !important;">
-                        <div><h3 id="d_low">0</h3><p data-i18n="d_low_label">النواقص</p></div>
-                        <i class="fa-solid fa-arrow-trend-down fa-2x opacity-25"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="summary-box" style="border-color: #f39c12 !important;">
-                        <div><h3 id="d_trans">0</h3><p data-i18n="d_trans_label">حركات اليوم</p></div>
-                        <i class="fa-solid fa-clock-rotate-left fa-2x opacity-25"></i>
-                    </div>
-                </div>
-            </div>
+    <div id="login-interface">
+        <div class="login-card">
+            <div class="login-logo"><i class="fa-solid fa-cubes-stacked"></i></div>
+            <h2 class="mb-4 fw-bold" data-i18n="app_title">المستودع الذكي</h2>
+            <p class="text-muted mb-4" data-i18n="login_msg">الرجاء تسجيل الدخول للمتابعة</p>
             
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header" data-i18n="recent_in">آخر عمليات الإدخال</div>
-                        <div class="card-body">
-                            <table class="table table-sm" id="dashInTable">
-                                <thead><tr><th data-i18n="item">الصنف</th><th data-i18n="qty">الكمية</th><th data-i18n="date">التاريخ</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
+            <form id="loginForm">
+                <div class="mb-3 text-start">
+                    <label class="form-label" data-i18n="email">البريد الإلكتروني</label>
+                    <input type="email" class="form-control form-control-lg" id="login_email" placeholder="name@example.com" required>
                 </div>
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-header" data-i18n="recent_out">آخر عمليات الصرف</div>
-                        <div class="card-body">
-                            <table class="table table-sm" id="dashOutTable">
-                                <thead><tr><th data-i18n="item">الصنف</th><th data-i18n="qty">الكمية</th><th data-i18n="date">التاريخ</th></tr></thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="mb-3 text-start">
+                    <label class="form-label" data-i18n="password">كلمة المرور</label>
+                    <input type="password" class="form-control form-control-lg" id="login_pass" required>
                 </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3" data-i18n="login_btn">دخول للنظام</button>
+            </form>
+            <div class="mt-3">
+                <small class="text-muted">Demo: admin@test.com / 123456</small>
             </div>
         </div>
+    </div>
 
-        <div id="items" class="section">
-            <div class="d-flex justify-content-between mb-3">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#itemModal" onclick="resetItemForm()">
-                    <i class="fa-solid fa-plus"></i> <span data-i18n="add_item">إضافة صنف</span>
-                </button>
-                <button class="btn btn-outline-primary" onclick="exportTableToCSV('itemsTable')">
-                    <i class="fa-solid fa-file-excel"></i> Excel
-                </button>
-            </div>
-            <div class="card">
-                <div class="card-body table-responsive">
-                    <table class="table table-hover" id="itemsTable">
-                        <thead>
-                            <tr>
-                                <th>SKU</th>
-                                <th data-i18n="item_name">اسم الصنف</th>
-                                <th data-i18n="cost">التكلفة</th>
-                                <th data-i18n="price">البيع</th>
-                                <th data-i18n="stock">الرصيد</th>
-                                <th data-i18n="actions">إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="inbound" class="section">
-            <div class="card p-4">
-                <form id="transFormIn">
-                    <h5 class="mb-3 border-bottom pb-2" data-i18n="nav_in">تسجيل دخول بضاعة</h5>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label data-i18n="date">التاريخ</label>
-                            <input type="date" class="form-control" id="in_date" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label data-i18n="ref">رقم المستند</label>
-                            <input type="text" class="form-control" id="in_ref" required>
-                        </div>
-                         <div class="col-md-4">
-                            <label data-i18n="supplier">المورد</label>
-                            <input type="text" class="form-control" id="in_party">
-                        </div>
-                        <div class="col-md-6">
-                            <label data-i18n="select_item">اختر الصنف</label>
-                            <select class="form-select" id="in_item" required onchange="fillPrice('in')"></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label data-i18n="qty">الكمية</label>
-                            <input type="number" class="form-control" id="in_qty" min="1" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label data-i18n="cost">سعر التكلفة</label>
-                            <input type="number" class="form-control" id="in_price" step="0.01" required>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary w-100" data-i18n="save_trans">حفظ الحركة</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="outbound" class="section">
-            <div class="card p-4">
-                <form id="transFormOut">
-                    <h5 class="mb-3 border-bottom pb-2" data-i18n="nav_out">تسجيل صرف بضاعة</h5>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label data-i18n="date">التاريخ</label>
-                            <input type="date" class="form-control" id="out_date" required>
-                        </div>
-                         <div class="col-md-4">
-                            <label data-i18n="ref">رقم المستند</label>
-                            <input type="text" class="form-control" id="out_ref" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label data-i18n="client">العميل</label>
-                            <input type="text" class="form-control" id="out_party">
-                        </div>
-                        <div class="col-md-6">
-                            <label data-i18n="select_item">اختر الصنف</label>
-                            <select class="form-select" id="out_item" required onchange="fillPrice('out')"></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label data-i18n="qty">الكمية</label>
-                            <input type="number" class="form-control" id="out_qty" min="1" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label data-i18n="price">سعر البيع</label>
-                            <input type="number" class="form-control" id="out_price" step="0.01" required>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-danger w-100" data-i18n="save_trans">حفظ الحركة</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="stock" class="section">
-            <div class="d-flex justify-content-between mb-3">
-                <h4 data-i18n="stock_report">تقرير المخزون</h4>
-                <button class="btn btn-outline-primary" onclick="window.print()"><i class="fa-solid fa-print"></i></button>
-            </div>
-             <div class="card">
-                <div class="card-body">
-                    <table class="table table-bordered" id="stockTable">
-                        <thead>
-                            <tr>
-                                <th>SKU</th>
-                                <th data-i18n="item_name">الاسم</th>
-                                <th data-i18n="in_total">إجمالي وارد</th>
-                                <th data-i18n="out_total">إجمالي صادر</th>
-                                <th data-i18n="stock">الرصيد الحالي</th>
-                                <th data-i18n="value">القيمة</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div id="app-interface">
         
-        <div id="reports" class="section">
-            <h4 class="mb-4" data-i18n="data_manage">إدارة البيانات</h4>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card p-4 text-center">
-                        <i class="fa-solid fa-download fa-3x text-primary mb-3"></i>
-                        <h5 data-i18n="backup">نسخ احتياطي</h5>
-                        <p class="text-muted" data-i18n="backup_desc">حفظ نسخة من البيانات على جهازك</p>
-                        <button class="btn btn-primary" onclick="backupData()">Download JSON</button>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card p-4 text-center">
-                        <i class="fa-solid fa-upload fa-3x text-warning mb-3"></i>
-                        <h5 data-i18n="restore">استعادة البيانات</h5>
-                        <p class="text-muted" data-i18n="restore_desc">رفع ملف نسخة احتياطية سابق</p>
-                        <input type="file" id="restoreFile" class="form-control mb-2" accept=".json">
-                        <button class="btn btn-warning" onclick="restoreData()">Restore Data</button>
-                    </div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h4><i class="fa-solid fa-boxes-stacked"></i> <span data-i18n="app_title">المستودع الذكي</span></h4>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" onclick="navTo('dashboard', this)" class="active"><i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_dash">لوحة التحكم</span></a>
+                <a href="#" onclick="navTo('items', this)"><i class="fa-solid fa-box-open"></i> <span data-i18n="nav_items">إدارة الأصناف</span></a>
+                <a href="#" onclick="navTo('inbound', this)"><i class="fa-solid fa-dolly"></i> <span data-i18n="nav_in">دخول بضاعة</span></a>
+                <a href="#" onclick="navTo('outbound', this)"><i class="fa-solid fa-truck-ramp-box"></i> <span data-i18n="nav_out">صرف بضاعة</span></a>
+                <a href="#" onclick="navTo('stock', this)"><i class="fa-solid fa-warehouse"></i> <span data-i18n="nav_stock">المخزون</span></a>
+                <a href="#" onclick="navTo('reports', this)"><i class="fa-solid fa-file-invoice"></i> <span data-i18n="nav_reports">التقارير</span></a>
+                <hr style="border-color: rgba(255,255,255,0.1)">
+                <a href="#" onclick="navTo('help', this)"><i class="fa-solid fa-circle-question"></i> <span data-i18n="nav_help">المساعدة</span></a>
+                <a href="#" onclick="navTo('about', this)"><i class="fa-solid fa-circle-info"></i> <span data-i18n="nav_about">من نحن</span></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#settingsModal"><i class="fa-solid fa-gear"></i> <span data-i18n="nav_settings">الإعدادات</span></a>
+            </div>
+            <div class="p-3">
+                <button onclick="logout()" class="btn btn-danger w-100"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="logout">خروج</span></button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <button class="btn btn-primary d-md-none" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                <h3 id="pageTitle"></h3>
+                <div><span class="badge bg-secondary p-2" id="user_email_display"></span></div>
+            </div>
+
+            <div id="dashboard" class="section active">
+                <h4 class="mb-3" data-i18n="dashboard_title">نظرة عامة</h4>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3"><div class="summary-box"><div><h3 id="d_items">0</h3><p data-i18n="d_items_label">الأصناف</p></div><i class="fa-solid fa-cubes fa-2x opacity-25"></i></div></div>
+                    <div class="col-md-3"><div class="summary-box" style="border-color: #27ae60 !important;"><div><h3 id="d_val">0</h3><p data-i18n="d_val_label">قيمة المخزون</p></div><i class="fa-solid fa-wallet fa-2x opacity-25"></i></div></div>
+                    <div class="col-md-3"><div class="summary-box" style="border-color: #e74c3c !important;"><div><h3 id="d_low">0</h3><p data-i18n="d_low_label">النواقص</p></div><i class="fa-solid fa-arrow-trend-down fa-2x opacity-25"></i></div></div>
+                    <div class="col-md-3"><div class="summary-box" style="border-color: #f39c12 !important;"><div><h3 id="d_trans">0</h3><p data-i18n="d_trans_label">حركات اليوم</p></div><i class="fa-solid fa-clock-rotate-left fa-2x opacity-25"></i></div></div>
                 </div>
             </div>
-         </div>
 
-    </div>
-
-    <div class="modal fade" id="itemModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-i18n="add_item">إضافة صنف</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="itemForm">
-                    <div class="modal-body">
-                        <input type="hidden" id="item_id">
-                        <div class="mb-2"><label>SKU</label><input type="text" class="form-control" id="item_sku" required></div>
-                        <div class="mb-2"><label data-i18n="item_name">الاسم</label><input type="text" class="form-control" id="item_name" required></div>
-                        <div class="row">
-                            <div class="col-6 mb-2"><label data-i18n="cost">التكلفة</label><input type="number" step="0.01" class="form-control" id="item_cost" required></div>
-                            <div class="col-6 mb-2"><label data-i18n="price">البيع</label><input type="number" step="0.01" class="form-control" id="item_price" required></div>
+            <div id="help" class="section">
+                <h4 class="mb-4" data-i18n="nav_help">مركز المساعدة والتعليمات</h4>
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1" data-i18n="h_q1">كيف أضيف صنف جديد؟</button></h2>
+                        <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body" data-i18n="h_a1">اذهب إلى صفحة "إدارة الأصناف"، اضغط على زر "إضافة صنف"، املأ البيانات المطلوبة (الاسم، SKU، السعر) ثم اضغط حفظ.</div>
                         </div>
-                        <div class="mb-2"><label data-i18n="min_stock">الحد الأدنى</label><input type="number" class="form-control" id="item_min" value="5"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" data-i18n="save">حفظ</button>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2" data-i18n="h_q2">كيف أسجل دخول بضاعة؟</button></h2>
+                        <div id="c2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body" data-i18n="h_a2">من القائمة الجانبية اختر "دخول بضاعة". اختر الصنف، ادخل الكمية وتكلفة الشراء، ثم اضغط "حفظ الحركة". سيزيد المخزون تلقائياً.</div>
+                        </div>
                     </div>
-                </form>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3" data-i18n="h_q3">كيف أطبع التقارير؟</button></h2>
+                        <div id="c3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body" data-i18n="h_a3">في صفحة "التقارير" أو "المخزون"، ستجد أيقونة طابعة أو زر Excel. اضغط عليه لتصدير البيانات أو طباعتها ورقياً.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4" data-i18n="h_q4">هل يمكنني استخدام النظام بدون إنترنت؟</button></h2>
+                        <div id="c4" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body" data-i18n="h_a4">نعم! النظام يعمل بالكامل على متصفحك ويحفظ البيانات محلياً. لا تحتاج لاتصال بالإنترنت بعد التحميل الأول.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div id="about" class="section">
+                <div class="card p-5 text-center">
+                    <div class="mb-4">
+                         <i class="fa-solid fa-building-shield fa-4x text-primary"></i>
+                    </div>
+                    <h2 data-i18n="about_title">عن النظام</h2>
+                    <p class="lead text-muted" data-i18n="about_desc">نظام إدارة مستودعات (WMS) متطور مصمم للشركات الصغيرة والمتوسطة.</p>
+                    <hr class="my-4 w-50 mx-auto">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 text-start">
+                            <p><i class="fa-solid fa-check text-success mx-2"></i> <strong>الإصدار:</strong> 2.0.0 Pro</p>
+                            <p><i class="fa-solid fa-check text-success mx-2"></i> <strong>التطوير:</strong> Gemini AI & Developer</p>
+                            <p><i class="fa-solid fa-check text-success mx-2"></i> <strong>الدعم الفني:</strong> support@example.com</p>
+                            <p><i class="fa-solid fa-check text-success mx-2"></i> <strong>حقوق النشر:</strong> © 2024 جميع الحقوق محفوظة.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="items" class="section">
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#itemModal" onclick="resetItemForm()"><i class="fa-solid fa-plus"></i> <span data-i18n="add_item">إضافة</span></button>
+                </div>
+                <div class="card"><div class="card-body table-responsive"><table class="table table-hover" id="itemsTable"><thead><tr><th>SKU</th><th data-i18n="item_name">اسم الصنف</th><th data-i18n="stock">الرصيد</th><th data-i18n="actions">إجراءات</th></tr></thead><tbody></tbody></table></div></div>
+            </div>
+
+            <div id="inbound" class="section">
+                <div class="card p-4">
+                    <form id="transFormIn"><h5 class="mb-3 border-bottom pb-2" data-i18n="nav_in">تسجيل دخول بضاعة</h5><div class="row g-3"><div class="col-md-4"><label data-i18n="date">التاريخ</label><input type="date" class="form-control" id="in_date" required></div><div class="col-md-4"><label data-i18n="ref">رقم المستند</label><input type="text" class="form-control" id="in_ref"></div><div class="col-md-4"><label data-i18n="select_item">اختر الصنف</label><select class="form-select" id="in_item" required></select></div><div class="col-md-4"><label data-i18n="qty">الكمية</label><input type="number" class="form-control" id="in_qty" min="1" required></div><div class="col-md-4"><label data-i18n="cost">التكلفة</label><input type="number" class="form-control" id="in_price" step="0.01" required></div><div class="col-12"><button type="submit" class="btn btn-primary w-100" data-i18n="save">حفظ</button></div></div></form>
+                </div>
+            </div>
+
+            <div id="outbound" class="section">
+                 <div class="card p-4">
+                    <form id="transFormOut"><h5 class="mb-3 border-bottom pb-2" data-i18n="nav_out">تسجيل صرف بضاعة</h5><div class="row g-3"><div class="col-md-4"><label data-i18n="date">التاريخ</label><input type="date" class="form-control" id="out_date" required></div><div class="col-md-4"><label data-i18n="ref">رقم المستند</label><input type="text" class="form-control" id="out_ref"></div><div class="col-md-4"><label data-i18n="select_item">اختر الصنف</label><select class="form-select" id="out_item" required></select></div><div class="col-md-4"><label data-i18n="qty">الكمية</label><input type="number" class="form-control" id="out_qty" min="1" required></div><div class="col-md-4"><label data-i18n="price">سعر البيع</label><input type="number" class="form-control" id="out_price" step="0.01" required></div><div class="col-12"><button type="submit" class="btn btn-danger w-100" data-i18n="save">حفظ</button></div></div></form>
+                </div>
+            </div>
+
+            <div id="stock" class="section">
+                <div class="d-flex justify-content-between mb-3"><h4 data-i18n="stock_report">تقرير المخزون</h4><button class="btn btn-outline-primary" onclick="window.print()"><i class="fa-solid fa-print"></i></button></div>
+                <div class="card"><div class="card-body"><table class="table table-bordered" id="stockTable"><thead><tr><th>SKU</th><th data-i18n="item_name">الاسم</th><th data-i18n="stock">الرصيد الحالي</th><th data-i18n="value">القيمة</th></tr></thead><tbody></tbody></table></div></div>
+            </div>
+
+            <div id="reports" class="section">
+                <h4 class="mb-4" data-i18n="data_manage">إدارة البيانات</h4>
+                <div class="row g-4">
+                    <div class="col-md-6"><div class="card p-4 text-center"><i class="fa-solid fa-download fa-3x text-primary mb-3"></i><h5 data-i18n="backup">نسخ احتياطي</h5><button class="btn btn-primary" onclick="backupData()">Download JSON</button></div></div>
+                    <div class="col-md-6"><div class="card p-4 text-center"><i class="fa-solid fa-upload fa-3x text-warning mb-3"></i><h5 data-i18n="restore">استعادة البيانات</h5><input type="file" id="restoreFile" class="form-control mb-2"><button class="btn btn-warning" onclick="restoreData()">Restore</button></div></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="modal fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-i18n="settings">الإعدادات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label data-i18n="language">اللغة</label>
-                        <select class="form-select" id="set_lang" onchange="changeLang(this.value)">
-                            <option value="ar">العربية</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label data-i18n="currency">العملة</label>
-                        <input type="text" class="form-control" id="set_currency" placeholder="SAR, USD, EGP...">
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="set_darkmode" onchange="toggleTheme()">
-                        <label class="form-check-label" data-i18n="dark_mode">الوضع الداكن</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="saveSettings()" data-i18n="save">حفظ التغييرات</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">صنف جديد</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><form id="itemForm"><div class="modal-body"><input type="hidden" id="item_id"><div class="mb-2"><label>SKU</label><input type="text" class="form-control" id="item_sku" required></div><div class="mb-2"><label data-i18n="item_name">الاسم</label><input type="text" class="form-control" id="item_name" required></div><div class="row"><div class="col-6 mb-2"><label data-i18n="cost">التكلفة</label><input type="number" step="0.01" class="form-control" id="item_cost" required></div><div class="col-6 mb-2"><label data-i18n="price">البيع</label><input type="number" step="0.01" class="form-control" id="item_price" required></div></div><div class="mb-2"><label data-i18n="min_stock">الحد الأدنى</label><input type="number" class="form-control" id="item_min" value="5"></div></div><div class="modal-footer"><button type="submit" class="btn btn-primary" data-i18n="save">حفظ</button></div></form></div></div></div>
+
+    <div class="modal fade" id="settingsModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" data-i18n="settings">الإعدادات</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="mb-3"><label data-i18n="language">اللغة</label><select class="form-select" id="set_lang" onchange="changeLang(this.value)"><option value="ar">العربية</option><option value="en">English</option></select></div><div class="mb-3"><label data-i18n="currency">العملة</label><input type="text" class="form-control" id="set_currency"></div><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="set_darkmode" onchange="saveSettings()"><label class="form-check-label" data-i18n="dark_mode">الوضع الداكن</label></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveSettings()" data-i18n="save">حفظ</button></div></div></div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- TRANSLATIONS ---
+        // --- TRANSLATION DICTIONARY ---
         const i18n = {
             ar: {
-                app_title: "المستودع الذكي",
-                nav_dash: "لوحة التحكم", nav_items: "إدارة الأصناف", nav_in: "دخول بضاعة", nav_out: "صرف بضاعة", nav_stock: "المخزون", nav_reports: "التقارير", nav_settings: "الإعدادات",
-                dashboard_title: "لوحة المعلومات",
-                d_items_label: "عدد الأصناف", d_val_label: "قيمة المخزون", d_low_label: "النواقص", d_trans_label: "حركات اليوم",
-                recent_in: "آخر عمليات الإدخال", recent_out: "آخر عمليات الصرف",
-                item: "الصنف", qty: "الكمية", date: "التاريخ",
-                add_item: "إضافة صنف", item_name: "اسم الصنف", cost: "التكلفة", price: "سعر البيع", stock: "الرصيد", actions: "إجراءات",
-                ref: "رقم المرجع", supplier: "المورد", client: "العميل", select_item: "اختر الصنف", save_trans: "حفظ العملية",
-                stock_report: "تقرير جرد المخزون", in_total: "مجموع الوارد", out_total: "مجموع الصادر", value: "القيمة الإجمالية",
-                data_manage: "إدارة البيانات", backup: "نسخ احتياطي", backup_desc: "تنزيل قاعدة البيانات كملف", restore: "استعادة", restore_desc: "رفع ملف النسخة الاحتياطية",
-                save: "حفظ", settings: "الإعدادات", language: "اللغة", currency: "رمز العملة", dark_mode: "الوضع الليلي", min_stock: "الحد الأدنى"
+                app_title: "المستودع الذكي", login_msg: "قم بتسجيل الدخول للوصول إلى البيانات", email: "البريد الإلكتروني", password: "كلمة المرور", login_btn: "دخول للنظام",
+                nav_dash: "لوحة التحكم", nav_items: "الأصناف", nav_in: "وارد", nav_out: "صادر", nav_stock: "المخزون", nav_reports: "التقارير", nav_help: "المساعدة", nav_about: "من نحن", nav_settings: "الإعدادات", logout: "تسجيل خروج",
+                dashboard_title: "نظرة عامة", d_items_label: "أصناف", d_val_label: "قيمة", d_low_label: "نواقص", d_trans_label: "حركات اليوم",
+                item_name: "اسم الصنف", cost: "التكلفة", price: "سعر البيع", stock: "الرصيد", actions: "إجراءات", date: "التاريخ", ref: "المرجع", qty: "الكمية", save: "حفظ",
+                stock_report: "تقرير المخزون", value: "القيمة",
+                h_q1: "كيف أضيف صنف جديد؟", h_a1: "من قائمة الأصناف، اضغط زر إضافة صنف.",
+                h_q2: "كيف أسجل وارد؟", h_a2: "من قائمة دخول بضاعة، اختر الصنف والكمية.",
+                h_q3: "كيف أطبع؟", h_a3: "يوجد زر طباعة في صفحات التقارير.",
+                h_q4: "بدون إنترنت؟", h_a4: "نعم يعمل بدون إنترنت.",
+                about_title: "عن النظام", about_desc: "نظام مبسط واحترافي للمستودعات.",
+                settings: "الإعدادات", language: "اللغة", dark_mode: "الوضع الليلي", currency: "العملة", backup: "نسخ احتياطي", restore: "استعادة"
             },
             en: {
-                app_title: "Smart WMS",
-                nav_dash: "Dashboard", nav_items: "Items Manager", nav_in: "Inbound", nav_out: "Outbound", nav_stock: "Stock Level", nav_reports: "Data & Reports", nav_settings: "Settings",
-                dashboard_title: "Dashboard Overview",
-                d_items_label: "Total Items", d_val_label: "Stock Value", d_low_label: "Low Stock", d_trans_label: "Today's Tx",
-                recent_in: "Recent Inbound", recent_out: "Recent Outbound",
-                item: "Item", qty: "Qty", date: "Date",
-                add_item: "Add Item", item_name: "Item Name", cost: "Cost", price: "Sell Price", stock: "Stock", actions: "Actions",
-                ref: "Reference", supplier: "Supplier", client: "Client", select_item: "Select Item", save_trans: "Save Transaction",
-                stock_report: "Inventory Report", in_total: "Total In", out_total: "Total Out", value: "Total Value",
-                data_manage: "Data Management", backup: "Backup Data", backup_desc: "Download DB as JSON", restore: "Restore Data", restore_desc: "Upload Backup File",
-                save: "Save", settings: "Settings", language: "Language", currency: "Currency Symbol", dark_mode: "Dark Mode", min_stock: "Min Level"
+                app_title: "Smart WMS", login_msg: "Please login to access data", email: "Email Address", password: "Password", login_btn: "Login",
+                nav_dash: "Dashboard", nav_items: "Items", nav_in: "Inbound", nav_out: "Outbound", nav_stock: "Stock", nav_reports: "Reports", nav_help: "Help", nav_about: "About Us", nav_settings: "Settings", logout: "Logout",
+                dashboard_title: "Overview", d_items_label: "Items", d_val_label: "Value", d_low_label: "Low Stock", d_trans_label: "Today's Tx",
+                item_name: "Item Name", cost: "Cost", price: "Sell Price", stock: "Stock", actions: "Actions", date: "Date", ref: "Ref", qty: "Qty", save: "Save",
+                stock_report: "Inventory Report", value: "Value",
+                h_q1: "How to add items?", h_a1: "Go to Items page, click Add Item.",
+                h_q2: "How to add stock?", h_a2: "Go to Inbound, select item and qty.",
+                h_q3: "How to print?", h_a3: "Use print button in report pages.",
+                h_q4: "Offline use?", h_a4: "Yes, it works offline.",
+                about_title: "About Us", about_desc: "Professional WMS for SMEs.",
+                settings: "Settings", language: "Language", dark_mode: "Dark Mode", currency: "Currency", backup: "Backup", restore: "Restore"
             }
         };
 
-        // --- STATE ---
-        let data = {
-            items: [],
-            transactions: [],
-            settings: {
-                lang: 'ar',
-                currency: 'SAR',
-                theme: 'light'
-            }
-        };
+        // --- DATA STORE ---
+        let data = { items: [], transactions: [], settings: { lang: 'ar', currency: 'SAR', theme: 'light' } };
+        let currentUser = null;
 
         // --- INIT ---
         document.addEventListener("DOMContentLoaded", () => {
             loadData();
-            applySettings();
-            refreshAll();
-            setInterval(updateClock, 60000);
-            updateClock();
-            
-            // Set default dates
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('in_date').value = today;
-            document.getElementById('out_date').value = today;
+            checkLogin();
         });
 
         function loadData() {
-            const stored = localStorage.getItem('wms_pro_db');
-            if(stored) data = JSON.parse(stored);
-            // Ensure settings exist if upgrading from old version
+            const s = localStorage.getItem('wms_final_db');
+            if(s) data = JSON.parse(s);
             if(!data.settings) data.settings = { lang: 'ar', currency: 'SAR', theme: 'light' };
         }
 
         function saveData() {
-            localStorage.setItem('wms_pro_db', JSON.stringify(data));
-            refreshAll();
+            localStorage.setItem('wms_final_db', JSON.stringify(data));
+            refreshUI();
         }
 
-        // --- SETTINGS & UI ---
-        function applySettings() {
-            const s = data.settings;
+        // --- LOGIN SYSTEM ---
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login_email').value;
+            const pass = document.getElementById('login_pass').value;
             
-            // Language & Direction
-            document.documentElement.lang = s.lang;
-            document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
-            
-            // Bootstrap CSS Swap for RTL/LTR
-            const cssLink = document.getElementById('bootstrap-css');
-            if(s.lang === 'ar') {
-                cssLink.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css";
-            } else {
-                cssLink.href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
+            // Simple Simulation
+            if(email && pass) {
+                currentUser = email;
+                sessionStorage.setItem('wms_user', email);
+                showApp();
             }
+        });
 
-            // Apply Translations
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(i18n[s.lang][key]) el.innerText = i18n[s.lang][key];
-            });
+        function checkLogin() {
+            const user = sessionStorage.getItem('wms_user');
+            if(user) {
+                currentUser = user;
+                showApp();
+            } else {
+                showLogin();
+            }
+        }
 
-            // Theme
-            document.body.setAttribute('data-theme', s.theme);
-            document.getElementById('set_darkmode').checked = (s.theme === 'dark');
+        function showLogin() {
+            document.getElementById('login-interface').style.display = 'flex';
+            document.getElementById('app-interface').style.display = 'none';
+        }
+
+        function showApp() {
+            document.getElementById('login-interface').style.display = 'none';
+            document.getElementById('app-interface').style.display = 'block'; // Fix flex issue
+            document.getElementById('user_email_display').innerText = currentUser;
             
-            // Inputs
-            document.getElementById('set_lang').value = s.lang;
-            document.getElementById('set_currency').value = s.currency;
+            applySettings();
+            refreshUI();
+            
+            // Set Defaults
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('in_date').value = today;
+            document.getElementById('out_date').value = today;
         }
 
-        function saveSettings() {
-            data.settings.lang = document.getElementById('set_lang').value;
-            data.settings.currency = document.getElementById('set_currency').value || '$';
-            data.settings.theme = document.getElementById('set_darkmode').checked ? 'dark' : 'light';
-            saveData();
-            location.reload(); // Reload to apply direction changes cleanly
-        }
-        
-        function toggleTheme() {
-             // Live preview of theme
-             const isDark = document.getElementById('set_darkmode').checked;
-             document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        function logout() {
+            sessionStorage.removeItem('wms_user');
+            currentUser = null;
+            location.reload();
         }
 
-        function navTo(sectionId, linkEl) {
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
-            if(linkEl) linkEl.classList.add('active');
+        // --- NAVIGATION & UI ---
+        function navTo(id, el) {
+            document.querySelectorAll('.section').forEach(d => d.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            // Update Title
+            const titleKey = el ? el.querySelector('span').getAttribute('data-i18n') : 'dashboard_title';
+            // document.getElementById('pageTitle').innerText = i18n[data.settings.lang][titleKey] || id;
+
             if(window.innerWidth <= 768) toggleSidebar();
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-        
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        function applySettings() {
+            const s = data.settings;
+            document.documentElement.lang = s.lang;
+            document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('bootstrap-css').href = (s.lang === 'ar') ? 
+                "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" : 
+                "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
+            
+            document.body.setAttribute('data-theme', s.theme);
+            document.getElementById('set_darkmode').checked = (s.theme === 'dark');
+            document.getElementById('set_lang').value = s.lang;
+            document.getElementById('set_currency').value = s.currency;
+
+            // Translate Text
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const k = el.getAttribute('data-i18n');
+                if(i18n[s.lang][k]) el.innerText = i18n[s.lang][k];
+            });
         }
 
-        // --- CORE LOGIC ---
-
-        function refreshAll() {
-            updateSelects();
-            renderItems();
-            renderTransTables();
-            renderStockReport();
-            updateDashboard();
+        function changeLang(l) { data.settings.lang = l; saveSettings(); location.reload(); }
+        function saveSettings() {
+            data.settings.currency = document.getElementById('set_currency').value;
+            data.settings.theme = document.getElementById('set_darkmode').checked ? 'dark' : 'light';
+            saveData();
+            location.reload();
         }
 
-        // Items
+        // --- LOGIC (CRUD) ---
+        function refreshUI() {
+            // Fill Selects
+            const opts = '<option value="">...</option>' + data.items.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
+            document.getElementById('in_item').innerHTML = opts;
+            document.getElementById('out_item').innerHTML = opts;
+
+            // Render Items
+            document.querySelector('#itemsTable tbody').innerHTML = data.items.map(i => `
+                <tr><td>${i.sku}</td><td>${i.name}</td><td>${i.stock}</td>
+                <td><button class="btn btn-sm btn-danger" onclick="delItem(${i.id})"><i class="fa-solid fa-trash"></i></button></td></tr>
+            `).join('');
+
+            // Render Stock
+            document.querySelector('#stockTable tbody').innerHTML = data.items.map(i => `
+                <tr><td>${i.sku}</td><td>${i.name}</td><td class="fw-bold">${i.stock}</td><td>${(i.stock*i.cost).toLocaleString()} ${data.settings.currency}</td></tr>
+            `).join('');
+
+            // Dashboard
+            document.getElementById('d_items').innerText = data.items.length;
+            document.getElementById('d_val').innerText = data.items.reduce((a,b)=>a+(b.stock*b.cost),0).toLocaleString();
+            document.getElementById('d_low').innerText = data.items.filter(i=>i.stock<=i.min).length;
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('d_trans').innerText = data.transactions.filter(t=>t.date===today).length;
+        }
+
+        // Actions
         document.getElementById('itemForm').addEventListener('submit', e => {
             e.preventDefault();
-            const id = document.getElementById('item_id').value;
-            const itemData = {
-                id: id ? parseInt(id) : Date.now(),
+            data.items.push({
+                id: Date.now(),
                 sku: document.getElementById('item_sku').value,
                 name: document.getElementById('item_name').value,
                 cost: parseFloat(document.getElementById('item_cost').value),
                 price: parseFloat(document.getElementById('item_price').value),
-                min: parseInt(document.getElementById('item_min').value),
-                stock: 0 
-            };
-            
-            if(id) {
-                const idx = data.items.findIndex(x => x.id == id);
-                itemData.stock = data.items[idx].stock; // preserve stock
-                data.items[idx] = itemData;
-            } else {
-                data.items.push(itemData);
-            }
-            
+                min: document.getElementById('item_min').value,
+                stock: 0
+            });
             saveData();
             bootstrap.Modal.getInstance(document.getElementById('itemModal')).hide();
+            e.target.reset();
         });
 
-        function resetItemForm() {
-            document.getElementById('itemForm').reset();
-            document.getElementById('item_id').value = '';
-        }
+        function delItem(id) { if(confirm('Delete?')) { data.items = data.items.filter(x=>x.id!==id); saveData(); } }
 
-        function deleteItem(id) {
-            if(confirm('Delete Item?')) {
-                data.items = data.items.filter(i => i.id !== id);
-                saveData();
-            }
-        }
-
-        function renderItems() {
-            const curr = data.settings.currency;
-            const tbody = document.querySelector('#itemsTable tbody');
-            tbody.innerHTML = data.items.map(i => `
-                <tr>
-                    <td>${i.sku}</td>
-                    <td>${i.name}</td>
-                    <td>${i.cost} ${curr}</td>
-                    <td>${i.price} ${curr}</td>
-                    <td class="${i.stock <= i.min ? 'text-danger fw-bold' : ''}">${i.stock}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning" onclick="editItem(${i.id})"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        function editItem(id) {
-            const i = data.items.find(x => x.id === id);
-            document.getElementById('item_id').value = i.id;
-            document.getElementById('item_sku').value = i.sku;
-            document.getElementById('item_name').value = i.name;
-            document.getElementById('item_cost').value = i.cost;
-            document.getElementById('item_price').value = i.price;
-            document.getElementById('item_min').value = i.min;
-            new bootstrap.Modal(document.getElementById('itemModal')).show();
-        }
-
-        // Transactions
-        function updateSelects() {
-            const opts = data.items.map(i => `<option value="${i.id}">${i.name} (${i.stock})</option>`).join('');
-            document.getElementById('in_item').innerHTML = '<option value="">...</option>' + opts;
-            document.getElementById('out_item').innerHTML = '<option value="">...</option>' + opts;
-        }
-
-        function fillPrice(type) {
-            const id = document.getElementById(type+'_item').value;
-            const item = data.items.find(i => i.id == id);
-            if(!item) return;
-            if(type === 'in') document.getElementById('in_price').value = item.cost;
-            if(type === 'out') document.getElementById('out_price').value = item.price;
-        }
-
-        function handleTrans(e, type) {
+        const handleTrans = (e, type) => {
             e.preventDefault();
             const id = document.getElementById(type+'_item').value;
             const qty = parseInt(document.getElementById(type+'_qty').value);
-            const price = parseFloat(document.getElementById(type+'_price').value);
-            const item = data.items.find(i => i.id == id);
-
-            if(type === 'out' && item.stock < qty) {
-                alert(data.settings.lang === 'ar' ? 'الرصيد غير كاف' : 'Insufficient Stock');
-                return;
-            }
-
-            item.stock += (type === 'in' ? qty : -qty);
-            if(type === 'in') item.cost = price; // Update cost on entry
-
-            data.transactions.push({
-                id: Date.now(),
-                type,
-                date: document.getElementById(type+'_date').value,
-                ref: document.getElementById(type+'_ref').value,
-                party: document.getElementById(type+'_party').value,
-                itemId: item.id,
-                itemName: item.name,
-                qty,
-                price,
-                total: qty * price
-            });
-
+            const item = data.items.find(x=>x.id==id);
+            
+            if(type==='out' && item.stock < qty) return alert('No Stock');
+            
+            item.stock += (type==='in'?qty:-qty);
+            data.transactions.push({ id:Date.now(), type, date:document.getElementById(type+'_date').value, itemId:id, qty });
             saveData();
             e.target.reset();
             alert('Done');
-        }
-
-        document.getElementById('transFormIn').addEventListener('submit', e => handleTrans(e, 'in'));
-        document.getElementById('transFormOut').addEventListener('submit', e => handleTrans(e, 'out'));
-
-        function renderTransTables() {
-            const render = (type, tableId) => {
-                const list = data.transactions.filter(t => t.type === type).slice(-5).reverse();
-                document.querySelector(`#${tableId} tbody`).innerHTML = list.map(t => `
-                    <tr><td>${t.itemName}</td><td>${t.qty}</td><td>${t.date}</td></tr>
-                `).join('');
-            };
-            render('in', 'dashInTable');
-            render('out', 'dashOutTable');
-        }
-
-        // Reports
-        function renderStockReport() {
-            const curr = data.settings.currency;
-            document.querySelector('#stockTable tbody').innerHTML = data.items.map(i => {
-                const inQty = data.transactions.filter(t => t.itemId === i.id && t.type === 'in').reduce((a,b)=>a+b.qty,0);
-                const outQty = data.transactions.filter(t => t.itemId === i.id && t.type === 'out').reduce((a,b)=>a+b.qty,0);
-                return `
-                    <tr>
-                        <td>${i.sku}</td><td>${i.name}</td>
-                        <td class="text-success">${inQty}</td><td class="text-danger">${outQty}</td>
-                        <td class="fw-bold">${i.stock}</td>
-                        <td>${(i.stock * i.cost).toLocaleString()} ${curr}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function updateDashboard() {
-            const curr = data.settings.currency;
-            document.getElementById('d_items').innerText = data.items.length;
-            const totalVal = data.items.reduce((a,b) => a + (b.stock * b.cost), 0);
-            document.getElementById('d_val').innerText = totalVal.toLocaleString() + ' ' + curr;
-            document.getElementById('d_low').innerText = data.items.filter(i => i.stock <= i.min).length;
-            
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('d_trans').innerText = data.transactions.filter(t => t.date === today).length;
-        }
-
-        // --- EXTRA TOOLS ---
-        function exportTableToCSV(tableId) {
-            let csv = [];
-            const rows = document.querySelectorAll(`#${tableId} tr`);
-            for (let i = 0; i < rows.length; i++) {
-                let row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) 
-                    row.push(cols[j].innerText);
-                csv.push(row.join(","));        
-            }
-            downloadFile(csv.join("\n"), 'report.csv', 'text/csv');
-        }
+        };
+        document.getElementById('transFormIn').addEventListener('submit', e=>handleTrans(e,'in'));
+        document.getElementById('transFormOut').addEventListener('submit', e=>handleTrans(e,'out'));
 
         function backupData() {
-            downloadFile(JSON.stringify(data), 'wms_backup_'+Date.now()+'.json', 'application/json');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type:'application/json'}));
+            a.download = 'wms_backup.json'; a.click();
         }
-
-        function downloadFile(content, fileName, mimeType) {
-            const a = document.createElement("a");
-            const file = new Blob([content], {type: mimeType});
-            a.href = URL.createObjectURL(file);
-            a.download = fileName;
-            a.click();
-        }
-
         function restoreData() {
-            const file = document.getElementById('restoreFile').files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    data = JSON.parse(e.target.result);
-                    saveData();
-                    location.reload();
-                } catch(err) { alert('Error reading file'); }
-            };
-            reader.readAsText(file);
+            const f = document.getElementById('restoreFile').files[0];
+            if(!f) return;
+            const r = new FileReader();
+            r.onload = e => { data = JSON.parse(e.target.result); saveData(); location.reload(); };
+            r.readAsText(f);
         }
     </script>
 </body>
