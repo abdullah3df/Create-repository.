@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght=400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -33,15 +33,38 @@
             color: #f3f4f6;
         }
 
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-body); transition: all 0.3s; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--bg-body); 
+            transition: all 0.3s; 
+            color: #334155; 
+            overflow-x: hidden;
+        }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
 
         /* --- Global Structure --- */
-        #login-screen { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--bg-card); padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 400px; }
+        .auth-screen { 
+            position: fixed; inset: 0; z-index: 9999; 
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .auth-box { 
+            background: var(--bg-card); padding: 40px; border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 400px; 
+            color: #334155; /* Ensure text is visible in light mode */
+        }
+        
+        /* Welcome Screen Specific */
+        #welcome-screen { z-index: 9999; }
+        #login-screen { z-index: 9998; display: none; }
 
         /* --- Sidebar --- */
-        .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; right: 0; background-color: var(--bg-card); box-shadow: var(--shadow); border-left: 1px solid var(--border-color); z-index: 1000; padding: 20px; transition: all 0.3s; }
+        .sidebar { 
+            width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; right: 0; 
+            background-color: var(--bg-card); box-shadow: var(--shadow); 
+            border-left: 1px solid var(--border-color); z-index: 1000; padding: 20px; 
+            transition: all 0.3s; 
+        }
         html[dir="ltr"] .sidebar { right: auto; left: 0; border-left: none; border-right: 1px solid var(--border-color); }
         .brand { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
         .nav-link { color: var(--secondary); font-weight: 500; border-radius: 8px; margin-bottom: 4px; transition: 0.2s; padding: 10px 15px; }
@@ -51,31 +74,48 @@
         .main-content { margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; }
         html[dir="ltr"] .main-content { margin-right: 0; margin-left: var(--sidebar-width); }
 
+        /* Mobile Adjustments for Sidebar */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
+            .main-content { margin-right: 0; padding: 15px; }
+            html[dir="ltr"] .sidebar { transform: translateX(-100%); }
+            html[dir="ltr"] .sidebar.active { transform: translateX(0); }
+        }
+
         /* --- Cards & Components --- */
         .card-box { background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 20px; }
         .stat-icon-box { background-color: var(--primary-light); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .stat-change { font-size: 0.9rem; font-weight: 600; }
         .table-custom th { font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); background: var(--bg-body); }
         .section { display: none; animation: fadeInUp 0.5s; }
         .section.active { display: block; }
-        
-        /* Barcode Scanner Input Style */
-        .barcode-input { background: #fff; border: 2px solid var(--primary); box-shadow: 0 0 5px rgba(6, 182, 212, 0.5); }
+        .barcode-input { border: 2px solid var(--primary); box-shadow: 0 0 5px rgba(6, 182, 212, 0.5); }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box text-center animate__animated animate__fadeInDown">
-            <i class="fa-solid fa-layer-group fa-3x mb-3" style="color:var(--primary)"></i>
-            <h2 class="fw-bold mb-1" data-i18n="app_title">Nexus ERP</h2>
-            <p class="text-muted mb-4" data-i18n="login_welcome">نظام إدارة المؤسسات المتكامل</p>
+    <div id="welcome-screen" class="auth-screen">
+        <div class="auth-box text-center animate__animated animate__fadeIn">
+            <i class="fa-solid fa-layer-group fa-4x mb-3" style="color:var(--primary)"></i>
+            <h1 class="fw-bold mb-3" data-i18n="app_title">Nexus ERP</h1>
+            <p class="lead text-muted mb-4" data-i18n="welcome_motto">إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية</p>
+            <button onclick="showLogin()" class="btn btn-primary w-100 py-2 fw-bold animate__animated animate__pulse animate__infinite" data-i18n="welcome_btn">البدء وتسجيل الدخول</button>
+            <div class="mt-4 text-muted small">© 2025 Nexus ERP.</div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="auth-screen">
+        <div class="auth-box text-center animate__animated animate__fadeInDown">
+            <i class="fa-solid fa-lock fa-3x mb-3" style="color:var(--primary)"></i>
+            <h2 class="fw-bold mb-1" data-i18n="login_title">تسجيل الدخول</h2>
+            <p class="text-muted mb-4" data-i18n="login_welcome">يرجى إدخال بيانات الوصول</p>
             <form id="login-form">
                 <input type="email" class="form-control mb-3 py-2" id="email" placeholder="البريد الإلكتروني" required>
                 <input type="password" class="form-control mb-4 py-2" id="password" placeholder="كلمة المرور" required>
                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" data-i18n="login_btn">دخول لوحة القيادة</button>
                 <div class="mt-3 text-muted small">Demo: admin@nexus.com / 123</div>
             </form>
+            <button onclick="showWelcome()" class="btn btn-link text-muted mt-3 small">العودة للصفحة الرئيسية</button>
         </div>
     </div>
 
@@ -116,49 +156,15 @@
             <section id="dashboard" class="section active">
                 <h5 class="fw-bold mb-4" data-i18n="kpi_title">المؤشرات المالية والمخزنية الرئيسية</h5>
                 <div class="row g-4 mb-5">
-                    <div class="col-md-3">
-                        <div class="card-box h-100 border-start border-4 border-primary">
-                            <p class="text-muted small mb-1" data-i18n="stock_value">قيمة المخزون الإجمالية</p>
-                            <h3 class="fw-bold" id="d-stock-value">0</h3>
-                            <div class="stat-change text-success small"><i class="fa-solid fa-arrow-up"></i> 10% (Growth)</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card-box h-100 border-start border-4 border-success">
-                            <p class="text-muted small mb-1" data-i18n="sales_value">إجمالي قيمة المبيعات</p>
-                            <h3 class="fw-bold text-success" id="d-sales-value">0</h3>
-                             <div class="stat-change text-success small"><i class="fa-solid fa-arrow-up"></i> 15% (Month)</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card-box h-100 border-start border-4 border-danger">
-                            <p class="text-muted small mb-1" data-i18n="cogs_value">إجمالي تكلفة المبيعات (COGS)</p>
-                            <h3 class="fw-bold text-danger" id="d-cogs-value">0</h3>
-                             <div class="stat-change text-danger small"><i class="fa-solid fa-arrow-down"></i> 2% (Efficiency)</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card-box h-100 border-start border-4 border-info">
-                            <p class="text-muted small mb-1" data-i18n="gross_margin">هامش الربح الإجمالي</p>
-                            <h3 class="fw-bold text-info" id="d-margin-value">0</h3>
-                            <div class="stat-change text-info small"><i class="fa-solid fa-arrow-up"></i> 5% (Margin)</div>
-                        </div>
-                    </div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-primary"><p class="text-muted small mb-1" data-i18n="stock_value">قيمة المخزون الإجمالية</p><h3 class="fw-bold" id="d-stock-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-success"><p class="text-muted small mb-1" data-i18n="sales_value">إجمالي قيمة المبيعات</p><h3 class="fw-bold text-success" id="d-sales-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-danger"><p class="text-muted small mb-1" data-i18n="cogs_value">إجمالي تكلفة المبيعات (COGS)</p><h3 class="fw-bold text-danger" id="d-cogs-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-info"><p class="text-muted small mb-1" data-i18n="gross_margin">هامش الربح الإجمالي</p><h3 class="fw-bold text-info" id="d-margin-value">0</h3></div></div>
                 </div>
 
                 <div class="row g-4">
-                    <div class="col-lg-8">
-                        <div class="card-box h-100">
-                            <h5 class="fw-bold mb-4" data-i18n="movement_chart">حركة الوارد والصادر (آخر 7 أيام)</h5>
-                            <canvas id="movementChart" style="max-height: 350px;"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card-box h-100">
-                            <h5 class="fw-bold mb-4" data-i18n="stock_health">حالة المخزون (بالكمية)</h5>
-                            <canvas id="stockHealthChart" style="max-height: 350px;"></canvas>
-                        </div>
-                    </div>
+                    <div class="col-lg-8"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="movement_chart">حركة الوارد والصادر (آخر 7 أيام)</h5><canvas id="movementChart" style="max-height: 350px;"></canvas></div></div>
+                    <div class="col-lg-4"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="stock_health">حالة المخزون (بالكمية)</h5><canvas id="stockHealthChart" style="max-height: 350px;"></canvas></div></div>
                 </div>
             </section>
 
@@ -230,12 +236,12 @@
                 </div>
             </section>
 
-            <section id="stock" class="section"><div class="card-box"><h4>3. قائمة المخزون اليومي</h4><table class="table table-custom" id="stockTable"><thead><tr><th>الصنف</th><th>الموقع</th><th>رصيد أول اليوم</th><th class="text-success">الداخل</th><th class="text-danger">الخارج</th><th>الرصيد المتبقي</th></tr></thead><tbody></tbody></table></div></section>
-            <section id="items" class="section"><div class="card-box"><h4>4. إدارة الأصناف</h4><button class="btn btn-primary btn-sm mb-3 no-print" onclick="openModal('itemModal')">إضافة صنف</button><div class="table-responsive"><table class="table table-custom" id="itemsTable"><thead><tr><th>الصنف</th><th>الوحدة</th><th>التكلفة</th><th>البيع</th><th>الحد الأدنى</th><th>الرصيد</th><th></th></tr></thead><tbody></tbody></table></div></div></section>
-            <section id="outbound" class="section"><div class="card-box"><h4>2. قائمة الإخراج (صرف بضاعة)</h4><form id="outForm"><div class="row g-3"><div class="col-md-3"><label class="form-label">تاريخ الصرف</label><input type="date" class="form-control" id="out_date" required></div><div class="col-md-3"><label class="form-label">رقم السند/الفاتورة</label><input type="text" class="form-control" id="out_ref" required></div><div class="col-md-3"><label class="form-label">اسم العميل/الجهة</label><input type="text" class="form-control" id="out_party" required></div><div class="col-md-3"><label class="form-label">اختر الصنف</label><select class="form-select" id="out_item" required onchange="fillDetails('out')"></select></div><div class="col-md-2"><label class="form-label small">SKU</label><input type="text" class="form-control bg-light" id="out_sku" readonly></div><div class="col-md-2"><label class="form-label">الكمية</label><input type="number" class="form-control" id="out_qty" required oninput="calcTotal('out')"></div><div class="col-md-2"><label class="form-label">قيمة البيع</label><input type="number" class="form-control" id="out_price" step="0.01" required oninput="calcTotal('out')"></div><div class="col-md-2"><label class="form-label">قيمة الصرف</label><input type="text" class="form-control bg-light fw-bold" id="out_total" readonly></div><div class="col-md-4"><label class="form-label">ملاحظات</label><input type="text" class="form-control" id="out_notes"></div><div class="col-12"><button type="submit" class="btn btn-warning text-white w-100">تسجيل صرف البضاعة</button></div></div></form></div></section>
-            <section id="audit" class="section"><div class="card-box"><h4>5. الجرد الشهري</h4><p>نموذج جرد وتصحيح الأرصدة.</p></div></section>
-            <section id="reports" class="section"><div class="card-box"><h4>6. التقارير</h4><p>لوحة تفاعلية لتقارير المشتريات والمبيعات والنواقص.</p></div></section>
-            <section id="docs" class="section"><div class="card-box"><h4>7. المستندات المطلوبة</h4><p>نماذج فواتير وسندات جاهزة للطباعة.</p></div></section>
+            <section id="stock" class="section"><div class="card-box"><h4>3. قائمة المخزون اليومي</h4><p>جدول المخزون</p></div></section>
+            <section id="items" class="section"><div class="card-box"><h4>4. إدارة الأصناف</h4><p>جدول الأصناف</p></div></section>
+            <section id="outbound" class="section"><div class="card-box"><h4>2. قائمة الإخراج (صرف بضاعة)</h4><p>نموذج صرف</p></div></section>
+            <section id="audit" class="section"><div class="card-box"><h4>5. الجرد الشهري</h4><p>نموذج جرد</p></div></section>
+            <section id="reports" class="section"><div class="card-box"><h4>6. التقارير</h4><p>لوحة التقارير</p></div></section>
+            <section id="docs" class="section"><div class="card-box"><h4>7. المستندات المطلوبة</h4><p>نماذج الطباعة</p></div></section>
         </main>
         
         <div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">إضافة صنف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="itemForm"><div class="mb-3"><label>اسم الصنف</label><input type="text" id="m_name" class="form-control" required></div><div class="mb-3"><label>SKU</label><input type="text" id="m_sku" class="form-control" required></div><div class="row"><div class="col-6"><label>التكلفة</label><input type="number" id="m_cost" class="form-control" required></div><div class="col-6"><label>البيع</label><input type="number" id="m_price" class="form-control"></div></div><div class="mt-3"><label>الحد الأدنى</label><input type="number" id="m_min" class="form-control" value="5"></div><div class="mt-3"><button type="submit" class="btn btn-primary w-100">حفظ</button></div></form></div></div></div></div>
@@ -248,16 +254,16 @@
         // --- Configuration & Translations ---
         const i18n = {
             ar: {
-                app_title: "Nexus ERP", login_welcome: "نظام إدارة المؤسسات المتكامل", login_btn: "دخول لوحة القيادة",
+                app_title: "Nexus ERP", welcome_motto: "إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية", welcome_btn: "البدء وتسجيل الدخول", login_title: "تسجيل الدخول", login_welcome: "يرجى إدخال بيانات الوصول", login_btn: "دخول لوحة القيادة",
                 menu_dash: "لوحة القيادة", menu_items: "4. إدارة الأصناف", menu_in: "1. إدخال (وارد)", menu_out: "2. إخراج (صرف)", menu_stock: "3. المخزون اليومي", menu_audit: "5. الجرد الشهري", menu_reports: "6. التقارير", menu_docs: "7. المستندات", menu_settings: "الإعدادات", menu_help: "التعليمات", menu_about: "من نحن", logout: "خروج",
                 kpi_title: "المؤشرات المالية والمخزنية الرئيسية", stock_value: "قيمة المخزون الإجمالية", sales_value: "إجمالي قيمة المبيعات", cogs_value: "إجمالي تكلفة المبيعات (COGS)", gross_margin: "هامش الربح الإجمالي",
-                movement_chart: "حركة الوارد والصادر (آخر 7 أيام)", stock_health: "حالة المخزون (بالكمية)"
+                movement_chart: "حركة الوارد والصادر (آخر 7 أيام)", stock_health: "حالة المخزون (بالكمية)", about_title: "عن نظام Nexus ERP"
             },
             en: {
-                app_title: "Nexus ERP", login_welcome: "Integrated Enterprise Management System", login_btn: "Access Dashboard",
+                app_title: "Nexus ERP", welcome_motto: "Integrated Inventory and Accounting Management with a Modern Touch", welcome_btn: "Get Started & Login", login_title: "Login", login_welcome: "Please enter your access details", login_btn: "Access Dashboard",
                 menu_dash: "Dashboard", menu_items: "4. Item Management", menu_in: "1. Inbound", menu_out: "2. Outbound", menu_stock: "3. Daily Stock", menu_audit: "5. Monthly Audit", menu_reports: "6. Reports", menu_docs: "7. Documents", menu_settings: "Settings", menu_help: "Instructions", menu_about: "About Us", logout: "Logout",
                 kpi_title: "Key Financial and Inventory Indicators", stock_value: "Total Inventory Value", sales_value: "Total Sales Value", cogs_value: "Total COGS", gross_margin: "Gross Margin",
-                movement_chart: "Inbound/Outbound Movement (Last 7 Days)", stock_health: "Stock Health (By Quantity)"
+                movement_chart: "Inbound/Outbound Movement (Last 7 Days)", stock_health: "Stock Health (By Quantity)", about_title: "About Nexus ERP System"
             }
         };
 
@@ -265,51 +271,83 @@
         let db = { items: [], trans: [], settings: { lang: 'ar', curr: 'SAR', dark: false } };
         let chartInstances = {};
         
-        // --- INIT & SETUP ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load Data & Apply Settings
-            const stored = localStorage.getItem('nexus_ultimate_db');
-            if(stored) db = JSON.parse(stored);
-            if(!db.settings) db.settings = { lang: 'ar', curr: 'SAR', dark: false };
-            
-            // Apply language/theme/currency settings
-            applySettings(db.settings);
-            
-            // Check login state (Simulated)
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-            
-            // Set today's date
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('in_date').value = today;
-            document.getElementById('out_date').value = today;
-            
-            // Assume logged in if not explicitly checking for a demo
-            document.getElementById('login-screen').classList.add('animate__animated', 'animate__fadeOut');
-            document.getElementById('app-interface').style.display = 'block';
-            
-            renderAll();
-            initCharts();
-        });
+        // --- AUTHENTICATION FLOW ---
+        function showWelcome() {
+            document.getElementById('welcome-screen').style.display = 'flex';
+            document.getElementById('login-screen').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('email').focus();
+        }
 
         function handleLogin(e) {
             e.preventDefault();
-            // This is a simulation for UI flow. In a real app, this connects to a server.
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
             if (email === 'admin@nexus.com' && password === '123') {
-                document.getElementById('login-screen').classList.add('animate__animated', 'animate__fadeOutUp');
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-interface').style.display = 'block';
-                    renderAll();
-                    initCharts();
-                }, 800);
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-interface').style.display = 'block';
+                // Remove auth screens from DOM for cleanup
+                document.getElementById('welcome-screen').remove();
+                document.getElementById('login-screen').remove();
+                nav('dashboard', document.querySelector('.nav-link')); // Go to Dashboard
             } else {
                  Swal.fire({ icon: 'error', title: 'خطأ', text: 'بيانات الدخول خاطئة (تجريبي: admin@nexus.com / 123)' });
             }
         }
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        
+        function logout() {
+            if(confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                 location.reload(); // Simplest way to return to welcome screen
+            }
+        }
 
+        // --- INIT & SETUP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const stored = localStorage.getItem('nexus_ultimate_db');
+            if(stored) db = JSON.parse(stored);
+            
+            // Apply language/theme/currency settings
+            applySettings(db.settings);
+            
+            // Set default date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('in_date').value = today;
+            document.getElementById('out_date').value = today;
+
+            showWelcome(); // Start at the welcome screen
+            renderAll();
+        });
+
+        // --- NAVIGATION & SIDEBAR FIX ---
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function nav(id, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            if(element) element.classList.add('active');
+            
+            document.getElementById('current-title').innerText = element ? element.querySelector('span').innerText : id;
+
+            // FIX: Close sidebar on mobile after navigation
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+            
+            // Re-render charts when entering dashboard
+            if (id === 'dashboard' && !chartInstances.movement) initCharts();
+        }
+
+        // --- SETTINGS ---
         function applySettings(s) {
             document.documentElement.lang = s.lang;
             document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
@@ -317,9 +355,13 @@
             document.getElementById('bootstrap-css').href = css;
             document.body.setAttribute('data-theme', s.dark ? 'dark' : 'light');
             
+            document.getElementById('set_lang').value = s.lang;
+            document.getElementById('set_curr').value = s.curr;
+            document.getElementById('set_theme').checked = s.dark;
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const k = el.getAttribute('data-i18n');
-                if(i18n[s.lang][k]) el.innerText = i18n[s.lang][k];
+                if(i18n[s.lang] && i18n[s.lang][k]) el.innerText = i18n[s.lang][k];
             });
         }
         
@@ -328,12 +370,11 @@
             db.settings.curr = document.getElementById('set_curr').value;
             db.settings.dark = document.getElementById('set_theme').checked;
             localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
-            location.reload(); // Reload to fully apply language changes
+            location.reload(); // Reload to fully apply changes
         }
 
-        // --- CHART LOGIC (The Professional Indicators) ---
+        // --- CHART LOGIC ---
         function initCharts() {
-            // Helper function for dummy data
             const dummyData = Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 5);
 
             // 1. Movement Chart (Line)
@@ -342,6 +383,7 @@
             gradient.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
             gradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
             
+            if(chartInstances.movement) chartInstances.movement.destroy(); // Destroy previous instance
             chartInstances.movement = new Chart(ctxMovement, {
                 type: 'line',
                 data: {
@@ -366,9 +408,10 @@
             // 2. Stock Health Chart (Doughnut)
             const ctxStock = document.getElementById('stockHealthChart').getContext('2d');
             const lowCount = db.items.filter(i => i.stock <= i.min).length;
-            const highCount = db.items.filter(i => i.stock > i.min * 2).length;
+            const highCount = db.items.filter(i => i.stock > (i.min * 2 || 10)).length;
             const medCount = db.items.length - lowCount - highCount;
 
+            if(chartInstances.stockHealth) chartInstances.stockHealth.destroy(); // Destroy previous instance
             chartInstances.stockHealth = new Chart(ctxStock, {
                 type: 'doughnut',
                 data: {
@@ -383,9 +426,9 @@
             });
         }
         
-        // --- WMS Logic (Simplified for Space) ---
+        // --- WMS Logic ---
         function handleBarcodeScan(sku) {
-            if (sku.length > 5) { // Assuming a barcode is at least 6 digits/chars
+            if (sku.length > 5) {
                 const item = db.items.find(i => i.sku === sku);
                 if (item) {
                     document.getElementById('in_item').value = item.id;
@@ -418,7 +461,6 @@
 
         // --- Renderers ---
         function renderAll() {
-            // Render basic stats and tables...
             // Render select options
             const opts = '<option value="">اختر...</option>' + db.items.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
             document.getElementById('in_item').innerHTML = opts;
@@ -431,17 +473,17 @@
 
             db.trans.filter(t => t.type === 'out').forEach(t => {
                 totalSales += t.total;
-                // Simplified COGS: assume cost price was constant at time of sale for demo
                 const item = db.items.find(i => i.id == t.itemId) || {cost: 0};
                 totalCOGS += t.qty * item.cost; 
             });
 
-            document.getElementById('d-stock-value').innerText = totalStockValue.toLocaleString() + ' ' + db.settings.curr;
-            document.getElementById('d-sales-value').innerText = totalSales.toLocaleString() + ' ' + db.settings.curr;
-            document.getElementById('d-cogs-value').innerText = totalCOGS.toLocaleString() + ' ' + db.settings.curr;
-            document.getElementById('d-margin-value').innerText = (totalSales - totalCOGS).toLocaleString() + ' ' + db.settings.curr;
+            const currency = db.settings.curr;
+            document.getElementById('d-stock-value').innerText = totalStockValue.toLocaleString() + ' ' + currency;
+            document.getElementById('d-sales-value').innerText = totalSales.toLocaleString() + ' ' + currency;
+            document.getElementById('d-cogs-value').innerText = totalCOGS.toLocaleString() + ' ' + currency;
+            document.getElementById('d-margin-value').innerText = (totalSales - totalCOGS).toLocaleString() + ' ' + currency;
 
-            if(chartInstances.stockHealth) initCharts();
+            if(document.getElementById('dashboard').classList.contains('active')) initCharts();
         }
 
         // --- Dummy Transaction Handlers for UI Flow ---
@@ -449,15 +491,23 @@
         document.getElementById('outForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'out'); });
         
         function handleTransSubmit(e, type) {
-             // In a real scenario, this is where data validation and saving to DB happens.
-             // For this demo, we just simulate success.
              Swal.fire({ icon: 'success', title: 'تم تسجيل العملية', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
              e.target.reset();
-             renderAll(); // Re-render KPIs
+             // Add dummy item to array to see the update
+             if(db.items.length === 0) {
+                 db.items.push({ id: 101, sku: "123456", name: "صنف تجريبي", unit: "قطعة", cost: 10, price: 15, min: 5, loc: "A-01", note: "", stock: 100 });
+             }
+             const item = db.items[0];
+             const qty = parseFloat(document.getElementById(type+'_qty').value) || 10;
+             item.stock += (type === 'in' ? qty : -qty);
+             db.trans.push({ id: Date.now(), type, date: document.getElementById(type+'_date').value, ref: 'REF123', party: 'Party A', itemId: item.id, itemName: item.name, qty, price: type==='in'?item.cost:item.price, total: qty * (type==='in'?item.cost:item.price), notes: '' });
+
+             localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
+             renderAll();
         }
 
         function globalSearch(val) {
-            // Implementation of global search (similar to previous versions)
+            // Placeholder for search logic
         }
     </script>
 </body>
