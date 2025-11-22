@@ -3,417 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus WMS | Enterprise Edition</title>
+    <title>Nexus ERP | نظام المحاسبة والمستودعات</title>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #4f46e5; /* Indigo 600 */
-            --primary-light: #e0e7ff;
-            --secondary: #64748b; /* Slate 500 */
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #0f172a;
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --border-color: #e2e8f0;
-            --sidebar-width: 260px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --primary: #4f46e5; --primary-light: #e0e7ff;
+            --secondary: #64748b; --bg-body: #f1f5f9; --bg-card: #ffffff;
+            --sidebar-width: 270px;
         }
-
-        [data-theme="dark"] {
-            --bg-body: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --border-color: #334155;
-            color: #f1f5f9;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-body);
-            color: #334155;
-            overflow-x: hidden;
-            transition: background-color 0.3s;
-        }
-        html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
-
-        /* --- Sidebar --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed; top: 0;
-            background-color: var(--bg-card);
-            border-left: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 24px 16px;
-            display: flex; flex-direction: column;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-            right: 0;
-        }
-        html[dir="ltr"] .sidebar { right: auto; left: 0; border-left: none; border-right: 1px solid var(--border-color); }
-
-        .brand {
-            font-size: 1.25rem; font-weight: 700; color: var(--primary);
-            display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding: 0 12px;
-        }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px;
-            color: var(--secondary);
-            font-weight: 500;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            transition: all 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-body); color: #334155; overflow-x: hidden; }
         
-        .nav-link:hover { background-color: var(--bg-body); color: var(--primary); }
-        .nav-link.active { background-color: var(--primary-light); color: var(--primary); }
-        [data-theme="dark"] .nav-link.active { background-color: rgba(79, 70, 229, 0.2); }
-
-        /* --- Main Area --- */
-        .main-content {
-            margin-right: var(--sidebar-width);
-            padding: 32px;
-            transition: 0.3s;
-            min-height: 100vh;
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; right: 0;
+            background: var(--bg-card); border-left: 1px solid #e2e8f0; z-index: 1000;
+            padding: 20px; display: flex; flex-direction: column; transition: 0.3s;
         }
-        html[dir="ltr"] .main-content { margin-right: 0; margin-left: var(--sidebar-width); }
+        .brand { font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: var(--secondary); border-radius: 8px; margin-bottom: 5px; text-decoration: none; transition: 0.2s; }
+        .nav-link:hover, .nav-link.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
+        
+        /* Main Content */
+        .main-content { margin-right: var(--sidebar-width); padding: 30px; min-height: 100vh; transition: 0.3s; }
+        
+        /* Cards */
+        .card-box { background: var(--bg-card); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        
+        /* Tables */
+        .table th { font-size: 0.85rem; text-transform: uppercase; color: var(--secondary); background: #f8fafc; }
+        .table td { vertical-align: middle; font-size: 0.95rem; }
+        
+        /* Status Pills */
+        .badge-soft-success { background: #dcfce7; color: #166534; }
+        .badge-soft-danger { background: #fee2e2; color: #991b1b; }
+        
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.3s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(5px);} to {opacity:1; transform:translateY(0);} }
 
-        /* --- Cards & Stats --- */
-        .card-box {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+        /* Documents Grid */
+        .doc-card {
+            border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; background: #fff;
         }
-        .card-box:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .doc-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1); }
+        .doc-icon { font-size: 2rem; color: var(--secondary); margin-bottom: 10px; }
 
-        .stat-icon-box {
-            width: 48px; height: 48px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem;
-        }
-        .bg-soft-primary { background-color: var(--primary-light); color: var(--primary); }
-        .bg-soft-success { background-color: #dcfce7; color: var(--success); }
-        .bg-soft-warning { background-color: #fef3c7; color: var(--warning); }
-
-        /* --- Tables --- */
-        .table-custom th {
-            font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;
-            color: var(--secondary); background-color: var(--bg-body); border-bottom: 0;
-            padding: 16px;
-        }
-        .table-custom td { padding: 16px; vertical-align: middle; border-bottom: 1px solid var(--border-color); }
-        [data-theme="dark"] .table-custom th { background-color: #1e293b; color: #94a3b8; }
-        [data-theme="dark"] .table-custom td { border-color: #334155; color: #e2e8f0; }
-
-        /* --- Indicators --- */
-        .stock-pill {
-            padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 6px;
-        }
-        .stock-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-        .stock-pill.high { background: #dcfce7; color: #166534; }
-        .stock-pill.low { background: #fee2e2; color: #991b1b; }
-        .stock-pill.med { background: #fef3c7; color: #92400e; }
-
-        .progress-slim { height: 6px; border-radius: 3px; background-color: var(--bg-body); overflow: hidden; margin-top: 6px; }
-        .progress-bar-slim { height: 100%; border-radius: 3px; }
-
-        /* --- Print --- */
-        @media print {
-            .sidebar, .no-print { display: none !important; }
-            .main-content { margin: 0 !important; padding: 0 !important; }
-            .card-box { box-shadow: none; border: 1px solid #ccc; }
-        }
-
-        /* --- Responsive --- */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
-            html[dir="ltr"] .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin: 0 !important; padding: 16px; }
+            .main-content { margin-right: 0; padding: 15px; }
         }
-        
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media print { .sidebar, .no-print { display: none !important; } .main-content { margin: 0; } }
     </style>
 </head>
 <body>
 
     <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <div style="width:32px; height:32px; background:var(--primary); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;">
-                <i class="fa-solid fa-cube"></i>
-            </div>
-            <span>Nexus WMS</span>
-        </div>
-        
-        <nav class="flex-grow-1">
-            <a onclick="nav('dashboard')" class="nav-link active"><i class="fa-solid fa-grid-2"></i> <span data-i18n="menu_dash">لوحة القيادة</span></a>
-            <a onclick="nav('items')" class="nav-link"><i class="fa-solid fa-layer-group"></i> <span data-i18n="menu_items">المنتجات والمخزون</span></a>
-            <a onclick="nav('inbound')" class="nav-link"><i class="fa-solid fa-arrow-down-to-line"></i> <span data-i18n="menu_in">أمر استلام (وارد)</span></a>
-            <a onclick="nav('outbound')" class="nav-link"><i class="fa-solid fa-arrow-up-from-line"></i> <span data-i18n="menu_out">أمر صرف (صادر)</span></a>
-            <a onclick="nav('reports')" class="nav-link"><i class="fa-solid fa-chart-simple"></i> <span data-i18n="menu_reports">التقارير والبيانات</span></a>
+        <div class="brand"><i class="fa-solid fa-cubes-stacked"></i> Nexus ERP</div>
+        <nav>
+            <a onclick="nav('dashboard')" class="nav-link active"><i class="fa-solid fa-chart-pie"></i> لوحة القيادة</a>
+            <a onclick="nav('items')" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> 4. إدارة الأصناف</a>
+            <a onclick="nav('inbound')" class="nav-link"><i class="fa-solid fa-dolly"></i> 1. إدخال (استلام)</a>
+            <a onclick="nav('outbound')" class="nav-link"><i class="fa-solid fa-truck-fast"></i> 2. إخراج (صرف)</a>
+            <a onclick="nav('stock')" class="nav-link"><i class="fa-solid fa-warehouse"></i> 3. المخزون اليومي</a>
+            <a onclick="nav('audit')" class="nav-link"><i class="fa-solid fa-clipboard-check"></i> 5. الجرد الشهري</a>
+            <a onclick="nav('reports')" class="nav-link"><i class="fa-solid fa-file-invoice"></i> 6. التقارير</a>
+            <a onclick="nav('docs')" class="nav-link"><i class="fa-solid fa-folder-open"></i> 7. المستندات</a>
         </nav>
-
-        <div class="mt-auto border-top pt-3" style="border-color: var(--border-color) !important;">
-            <a onclick="nav('settings')" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-i18n="menu_settings">الإعدادات</span></a>
-            <a onclick="nav('help')" class="nav-link"><i class="fa-solid fa-circle-question"></i> <span data-i18n="menu_help">المساعدة</span></a>
-            <a onclick="logout()" class="nav-link text-danger"><i class="fa-solid fa-power-off"></i> <span data-i18n="logout">تسجيل خروج</span></a>
-        </div>
     </aside>
 
     <main class="main-content">
-        
-        <header class="d-flex justify-content-between align-items-center mb-5">
-            <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light d-md-none shadow-sm" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-                <div>
-                    <h3 class="fw-bold m-0" id="page-title" style="color:var(--primary)">لوحة القيادة</h3>
-                    <p class="text-muted small m-0" id="current-date"></p>
-                </div>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="d-none d-md-block">
-                    <div class="input-group shadow-sm" style="width: 250px;">
-                        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="بحث عام..." onkeyup="globalSearch(this.value)">
-                    </div>
-                </div>
-                <div class="bg-white p-1 rounded-pill shadow-sm d-flex align-items-center pe-3 border">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=4f46e5&color=fff" class="rounded-circle" width="32">
-                    <span class="ms-2 fw-bold small text-muted">Admin</span>
-                </div>
-            </div>
+        <header class="d-flex justify-content-between mb-4 align-items-center">
+            <button class="btn btn-light d-md-none" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="fa-solid fa-bars"></i></button>
+            <h3 class="fw-bold text-primary" id="page-title">لوحة القيادة</h3>
+            <div class="text-muted small" id="date-display"></div>
         </header>
 
         <section id="dashboard" class="section active">
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="card-box d-flex justify-content-between align-items-start h-100">
-                        <div>
-                            <p class="text-muted small fw-bold text-uppercase mb-1" data-i18n="total_items">الأصناف</p>
-                            <h2 class="fw-bold mb-0" id="d-items">0</h2>
-                        </div>
-                        <div class="stat-icon-box bg-soft-primary"><i class="fa-solid fa-box"></i></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card-box d-flex justify-content-between align-items-start h-100">
-                        <div>
-                            <p class="text-muted small fw-bold text-uppercase mb-1" data-i18n="stock_value">قيمة المخزون</p>
-                            <h2 class="fw-bold mb-0 text-success" id="d-value">0</h2>
-                        </div>
-                        <div class="stat-icon-box bg-soft-success"><i class="fa-solid fa-dollar-sign"></i></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card-box d-flex justify-content-between align-items-start h-100">
-                        <div>
-                            <p class="text-muted small fw-bold text-uppercase mb-1" data-i18n="low_stock">نواقص المخزون</p>
-                            <h2 class="fw-bold mb-0 text-warning" id="d-low">0</h2>
-                        </div>
-                        <div class="stat-icon-box bg-soft-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    </div>
-                </div>
-                 <div class="col-md-3">
-                    <div class="card-box d-flex justify-content-between align-items-start h-100">
-                        <div>
-                            <p class="text-muted small fw-bold text-uppercase mb-1">حركات اليوم</p>
-                            <h2 class="fw-bold mb-0" id="d-today">0</h2>
-                        </div>
-                        <div class="stat-icon-box bg-light text-dark"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="card-box h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold m-0">تحليلات المخزون</h5>
-                            <span class="badge bg-soft-primary rounded-pill">أداء شهري</span>
-                        </div>
-                        <canvas id="mainChart" style="max-height: 300px;"></canvas>
+                <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-primary"><h5>الأصناف</h5><h2 id="d-items">0</h2></div></div>
+                <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-success"><h5>قيمة المخزون</h5><h2 id="d-value" class="text-success">0</h2></div></div>
+                <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-warning"><h5>نواقص</h5><h2 id="d-low" class="text-warning">0</h2></div></div>
+                <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-info"><h5>حركات اليوم</h5><h2 id="d-today">0</h2></div></div>
+            </div>
+            <div class="card-box mt-4">
+                <h5>آخر الحركات المسجلة</h5>
+                <table class="table table-striped" id="dash-table">
+                    <thead><tr><th>النوع</th><th>التاريخ</th><th>المرجع</th><th>الطرف (المورد/العميل)</th><th>الصنف</th><th>الكمية</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="inbound" class="section">
+            <div class="card-box">
+                <h4 class="mb-4 text-primary"><i class="fa-solid fa-dolly"></i> 1. قائمة الإدخال (دخول بضاعة)</h4>
+                <form id="inForm">
+                    <div class="row g-3">
+                        <div class="col-md-3"><label>تاريخ الاستلام</label><input type="date" class="form-control" id="in_date" required></div>
+                        <div class="col-md-3"><label>رقم الفاتورة</label><input type="text" class="form-control" id="in_ref" required></div>
+                        <div class="col-md-3"><label>اسم المورد</label><input type="text" class="form-control" id="in_party" placeholder="شركة..." required></div>
+                        <div class="col-md-3"><label>اختر الصنف</label><select class="form-select" id="in_item" required onchange="fillDetails('in')"></select></div>
+                        
+                        <div class="col-md-2"><label class="text-muted small">SKU</label><input type="text" class="form-control bg-light" id="in_sku" readonly></div>
+                        <div class="col-md-2"><label>الكمية</label><input type="number" class="form-control" id="in_qty" required oninput="calcTotal('in')"></div>
+                        <div class="col-md-2"><label>سعر التكلفة</label><input type="number" class="form-control" id="in_cost" step="0.01" required oninput="calcTotal('in')"></div>
+                        <div class="col-md-2"><label>إجمالي التكلفة</label><input type="text" class="form-control bg-light fw-bold" id="in_total" readonly></div>
+                        <div class="col-md-4"><label>ملاحظات</label><input type="text" class="form-control" id="in_notes"></div>
+                        
+                        <div class="col-12"><button type="submit" class="btn btn-primary w-100">تسجيل دخول البضاعة</button></div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card-box h-100">
-                        <h5 class="fw-bold mb-4">آخر العمليات</h5>
-                        <div id="recent-activity-list" class="d-flex flex-column gap-3">
-                            </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="outbound" class="section">
+            <div class="card-box border-top border-4 border-warning">
+                <h4 class="mb-4 text-warning"><i class="fa-solid fa-truck-fast"></i> 2. قائمة الإخراج (صرف بضاعة)</h4>
+                <form id="outForm">
+                    <div class="row g-3">
+                        <div class="col-md-3"><label>تاريخ الصرف</label><input type="date" class="form-control" id="out_date" required></div>
+                        <div class="col-md-3"><label>رقم السند/الفاتورة</label><input type="text" class="form-control" id="out_ref" required></div>
+                        <div class="col-md-3"><label>اسم العميل/الجهة</label><input type="text" class="form-control" id="out_party" placeholder="العميل..." required></div>
+                        <div class="col-md-3"><label>اختر الصنف</label><select class="form-select" id="out_item" required onchange="fillDetails('out')"></select></div>
+                        
+                        <div class="col-md-2"><label class="text-muted small">SKU</label><input type="text" class="form-control bg-light" id="out_sku" readonly></div>
+                        <div class="col-md-2"><label>الكمية</label><input type="number" class="form-control" id="out_qty" required oninput="calcTotal('out')"></div>
+                        <div class="col-md-2"><label>قيمة البيع (للوحدة)</label><input type="number" class="form-control" id="out_price" step="0.01" required oninput="calcTotal('out')"></div>
+                        <div class="col-md-2"><label>قيمة الصرف الإجمالية</label><input type="text" class="form-control bg-light fw-bold" id="out_total" readonly></div>
+                        <div class="col-md-4"><label>ملاحظات</label><input type="text" class="form-control" id="out_notes"></div>
+                        
+                        <div class="col-12"><button type="submit" class="btn btn-warning text-white w-100">تسجيل صرف البضاعة</button></div>
                     </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="stock" class="section">
+            <div class="card-box">
+                <div class="d-flex justify-content-between mb-3 no-print">
+                    <h4>3. قائمة المخزون اليومي</h4>
+                    <button onclick="window.print()" class="btn btn-sm btn-outline-dark"><i class="fa-print fa"></i> طباعة</button>
                 </div>
+                <table class="table table-bordered table-hover" id="stockTable">
+                    <thead class="table-light">
+                        <tr><th>الصنف</th><th>موقع التخزين</th><th>رصيد أول اليوم</th><th class="text-success">الداخل</th><th class="text-danger">الخارج</th><th>الرصيد المتبقي</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </section>
 
         <section id="items" class="section">
             <div class="card-box">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h5 class="fw-bold m-0">قائمة المنتجات</h5>
-                        <p class="text-muted small m-0">إدارة ومراقبة مستويات المخزون</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-outline-success btn-sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
-                        <button class="btn btn-primary btn-sm" onclick="openModal('itemModal')"><i class="fa-solid fa-plus"></i> <span data-i18n="add_item">إضافة</span></button>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>4. قائمة إدارة الأصناف</h4>
+                    <button class="btn btn-primary" onclick="openItemModal()"><i class="fa-solid fa-plus"></i> إضافة صنف</button>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-custom table-hover align-middle" id="itemsTable">
-                        <thead><tr><th data-i18n="item">المنتج</th><th data-i18n="cost">التكلفة</th><th data-i18n="price">البيع</th><th data-i18n="stock">الحالة & الرصيد</th><th></th></tr></thead>
+                    <table class="table align-middle" id="itemsTable">
+                        <thead><tr><th>SKU</th><th>الصنف</th><th>الوحدة</th><th>الموقع</th><th>التكلفة</th><th>البيع</th><th>الحد الأدنى</th><th>ملاحظات</th><th>الرصيد</th><th></th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <section id="inbound" class="section">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card-box">
-                        <div class="text-center mb-4">
-                            <div class="stat-icon-box bg-soft-primary mx-auto mb-2"><i class="fa-solid fa-dolly"></i></div>
-                            <h4 class="fw-bold"><span data-i18n="menu_in">استلام بضاعة (وارد)</span></h4>
-                            <p class="text-muted small">تسجيل دخول كميات جديدة للمستودع</p>
+        <section id="audit" class="section">
+            <div class="card-box">
+                <h4 class="mb-4 text-info"><i class="fa-solid fa-clipboard-check"></i> 5. قائمة الجرد الشهري</h4>
+                <div class="bg-light p-3 rounded mb-4 border">
+                    <form id="auditForm" class="row g-3 align-items-end">
+                        <div class="col-md-4"><label>اسم الصنف</label><select id="audit_item" class="form-select" onchange="fillAuditSys()" required></select></div>
+                        <div class="col-md-2"><label>رصيد النظام</label><input type="text" id="audit_sys" class="form-control bg-white" readonly></div>
+                        <div class="col-md-2"><label>الرصيد الفعلي</label><input type="number" id="audit_actual" class="form-control" required oninput="calcDiff()"></div>
+                        <div class="col-md-2"><label>الفرق</label><input type="text" id="audit_diff" class="form-control bg-white" readonly></div>
+                        <div class="col-md-2"><label>سبب الفرق</label>
+                            <select id="audit_reason" class="form-select">
+                                <option value="-">لا يوجد</option>
+                                <option value="تلف">تلف</option>
+                                <option value="فقد">فقد/سرقة</option>
+                                <option value="خطأ إدخال">خطأ إدخال</option>
+                            </select>
                         </div>
-                        <form id="inForm">
-                            <div class="row g-3">
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">رقم المرجع</label><input type="text" class="form-control" id="in_ref" required></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">التاريخ</label><input type="date" class="form-control" id="in_date" required></div>
-                                <div class="col-12"><label class="form-label text-muted small fw-bold">اختر الصنف</label><select class="form-select" id="in_item" required></select></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">الكمية</label><input type="number" class="form-control" id="in_qty" min="1" required></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">التكلفة للوحدة</label><input type="number" class="form-control" id="in_cost" step="0.01" required></div>
-                                <div class="col-12 pt-2"><button type="submit" class="btn btn-primary w-100 py-2" data-i18n="save">تأكيد الاستلام</button></div>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="col-md-3"><label>اسم الموظف المعتمد</label><input type="text" id="audit_user" class="form-control" required></div>
+                        <div class="col-md-3"><button type="submit" class="btn btn-info text-white w-100">اعتماد الجرد</button></div>
+                    </form>
                 </div>
-            </div>
-        </section>
-
-        <section id="outbound" class="section">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card-box border-warning" style="border-width: 0 0 0 4px;">
-                        <div class="text-center mb-4">
-                            <div class="stat-icon-box bg-soft-warning mx-auto mb-2"><i class="fa-solid fa-truck-fast"></i></div>
-                            <h4 class="fw-bold"><span data-i18n="menu_out">صرف بضاعة (صادر)</span></h4>
-                            <p class="text-muted small">تسجيل خروج كميات للعملاء</p>
-                        </div>
-                        <form id="outForm">
-                            <div class="row g-3">
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">رقم المرجع</label><input type="text" class="form-control" id="out_ref" required></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">التاريخ</label><input type="date" class="form-control" id="out_date" required></div>
-                                <div class="col-12"><label class="form-label text-muted small fw-bold">اختر الصنف</label><select class="form-select" id="out_item" required></select></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">الكمية</label><input type="number" class="form-control" id="out_qty" min="1" required></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">سعر البيع للوحدة</label><input type="number" class="form-control" id="out_price" step="0.01" required></div>
-                                <div class="col-12 pt-2"><button type="submit" class="btn btn-warning w-100 py-2 text-white" data-i18n="save">تأكيد الصرف</button></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <table class="table table-sm" id="auditTable">
+                    <thead><tr><th>الصنف</th><th>رصيد النظام</th><th>الفعلي</th><th>الفرق</th><th>الحالة</th><th>السبب</th><th>المعتمد</th><th>التاريخ</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </section>
 
         <section id="reports" class="section">
-            <div class="card-box">
-                <div class="d-flex justify-content-between align-items-center mb-4 no-print">
-                    <h5 class="fw-bold m-0">سجل العمليات التاريخي</h5>
-                    <button class="btn btn-dark btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> طباعة</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-custom table-striped" id="reportTable">
-                        <thead><tr><th>نوع العملية</th><th>المنتج</th><th>الكمية</th><th>التاريخ</th><th>المرجع</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+            <h4 class="mb-4">6. قائمة التقارير الأساسية</h4>
+            <div class="row g-4">
+                <div class="col-md-4"><div class="doc-card" onclick="filterReport('all')"><i class="doc-icon fa-solid fa-list"></i><h6>تقرير المخزون الحالي</h6></div></div>
+                <div class="col-md-4"><div class="doc-card" onclick="filterReport('in')"><i class="doc-icon fa-solid fa-cart-arrow-down"></i><h6>تقرير المشتريات</h6></div></div>
+                <div class="col-md-4"><div class="doc-card" onclick="filterReport('out')"><i class="doc-icon fa-solid fa-money-bill-trend-up"></i><h6>تقرير المبيعات</h6></div></div>
+                <div class="col-md-4"><div class="doc-card" onclick="nav('audit')"><i class="doc-icon fa-solid fa-triangle-exclamation"></i><h6>تقرير التالف والفرق</h6></div></div>
+                <div class="col-md-4"><div class="doc-card" onclick="alert('إجمالي قيمة المخزون: ' + document.getElementById('d-value').innerText)"><i class="doc-icon fa-solid fa-sack-dollar"></i><h6>تقرير قيمة المخزون</h6></div></div>
+                <div class="col-md-4"><div class="doc-card" onclick="filterReport('low')"><i class="doc-icon fa-solid fa-battery-quarter"></i><h6>تقرير النواقص (الحد الأدنى)</h6></div></div>
+            </div>
+            <div id="report-results" class="card-box mt-4 d-none">
+                <h5 id="report-title">نتائج التقرير</h5>
+                <table class="table table-bordered" id="report-table-body"></table>
             </div>
         </section>
 
-        <section id="settings" class="section">
+        <section id="docs" class="section">
+            <h4 class="mb-4">7. قائمة المستندات المطلوبة</h4>
+            <p class="text-muted">اضغط لطباعة نموذج فارغ أو استعراض القوالب</p>
             <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card-box h-100">
-                        <h5 class="fw-bold mb-4">تفضيلات النظام</h5>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">اللغة / Language</label>
-                            <select class="form-select" id="set_lang" onchange="saveSettings()">
-                                <option value="ar">العربية</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">رمز العملة</label>
-                            <input type="text" class="form-control" id="set_curr" onchange="saveSettings()">
-                        </div>
-                         <div class="form-check form-switch pt-2">
-                            <input class="form-check-input" type="checkbox" id="set_theme" onchange="saveSettings()">
-                            <label class="form-check-label fw-bold">تفعيل الوضع الليلي (Dark Mode)</label>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-md-6">
-                    <div class="card-box h-100 bg-soft-primary border-0">
-                        <h5 class="fw-bold text-primary">عن النظام</h5>
-                        <p class="small text-muted">Nexus WMS Enterprise Edition v4.0</p>
-                        <p>نظام متكامل يدعم التخزين المحلي، تعدد اللغات، ومؤشرات ذكية.</p>
-                        <hr>
-                        <button class="btn btn-primary btn-sm" onclick="nav('help')">فتح مركز المساعدة</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="help" class="section">
-            <div class="card-box">
-                <h5 class="fw-bold mb-4">الأسئلة الشائعة</h5>
-                <div class="accordion" id="accHelp">
-                    <div class="accordion-item border-0 mb-2 shadow-sm rounded">
-                        <h2 class="accordion-header"><button class="accordion-button rounded" type="button" data-bs-toggle="collapse" data-bs-target="#h1">كيف أبدأ؟</button></h2>
-                        <div id="h1" class="accordion-collapse collapse show" data-bs-parent="#accHelp"><div class="accordion-body">أضف الأصناف أولاً من صفحة المنتجات، ثم استخدم الوارد لزيادة المخزون.</div></div>
-                    </div>
-                     <div class="accordion-item border-0 mb-2 shadow-sm rounded">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed rounded" type="button" data-bs-toggle="collapse" data-bs-target="#h2">النسخ الاحتياطي؟</button></h2>
-                        <div id="h2" class="accordion-collapse collapse" data-bs-parent="#accHelp"><div class="accordion-body">بياناتك محفوظة تلقائياً في المتصفح. لا تقم بمسح بيانات المتصفح لتجنب فقدانها.</div></div>
-                    </div>
-                </div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('فاتورة شراء')"><i class="doc-icon fa-solid fa-file-invoice"></i><h6>فاتورة شراء</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('فاتورة بيع')"><i class="doc-icon fa-solid fa-file-invoice-dollar"></i><h6>فاتورة بيع</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('سند إدخال')"><i class="doc-icon fa-solid fa-file-import"></i><h6>سند إدخال مخزني</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('سند إخراج')"><i class="doc-icon fa-solid fa-file-export"></i><h6>سند إخراج مخزني</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('محضر جرد')"><i class="doc-icon fa-solid fa-clipboard-list"></i><h6>محضر جرد</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('طلب صرف')"><i class="doc-icon fa-solid fa-hand-holding-box"></i><h6>طلب صرف بضاعة</h6></div></div>
+                <div class="col-md-3"><div class="doc-card" onclick="printTemplate('طلب شراء')"><i class="doc-icon fa-solid fa-cart-plus"></i><h6>طلب شراء</h6></div></div>
             </div>
         </section>
 
     </main>
 
     <div class="modal fade" id="itemModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" data-i18n="add_item">إضافة منتج جديد</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body pt-4">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">إضافة صنف جديد</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
                     <form id="itemForm">
-                        <div class="mb-3"><label class="fw-bold small text-muted">الاسم</label><input type="text" class="form-control" id="m_name" required></div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-6"><label class="fw-bold small text-muted">التكلفة</label><input type="number" class="form-control" id="m_cost" required></div>
-                            <div class="col-6"><label class="fw-bold small text-muted">سعر البيع</label><input type="number" class="form-control" id="m_price" required></div>
+                        <div class="row g-3">
+                            <div class="col-md-6"><label>اسم الصنف</label><input type="text" id="m_name" class="form-control" required></div>
+                            <div class="col-md-6"><label>رقم الصنف (SKU)</label><input type="text" id="m_sku" class="form-control" required></div>
+                            <div class="col-md-4"><label>وحدة القياس</label>
+                                <select id="m_unit" class="form-select">
+                                    <option value="قطعة">قطعة</option><option value="كرتون">كرتون</option><option value="كجم">كجم</option><option value="متر">متر</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4"><label>سعر التكلفة</label><input type="number" id="m_cost" class="form-control" step="0.01" required></div>
+                            <div class="col-md-4"><label>سعر البيع</label><input type="number" id="m_price" class="form-control" step="0.01"></div>
+                            <div class="col-md-6"><label>الحد الأدنى</label><input type="number" id="m_min" class="form-control" value="5"></div>
+                            <div class="col-md-6"><label>موقع التخزين (الرف)</label><input type="text" id="m_loc" class="form-control" placeholder="A-01"></div>
+                            <div class="col-12"><label>ملاحظات</label><input type="text" id="m_note" class="form-control"></div>
+                            <div class="col-12"><button type="submit" class="btn btn-primary w-100">حفظ الصنف</button></div>
                         </div>
-                        <div class="mb-3"><label class="fw-bold small text-muted">الحد الأدنى للتنبيه</label><input type="number" class="form-control" id="m_min" value="5"></div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" data-i18n="save">حفظ المنتج</button>
                     </form>
                 </div>
             </div>
@@ -421,274 +262,253 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <script>
-        // --- Configuration & Translations ---
-        const i18n = {
-            ar: {
-                menu_dash: "لوحة القيادة", menu_items: "المنتجات", menu_in: "وارد", menu_out: "صادر", menu_reports: "التقارير", menu_settings: "الإعدادات", menu_help: "مساعدة", logout: "خروج",
-                total_items: "إجمالي الأصناف", stock_value: "قيمة المخزون", low_stock: "نواقص",
-                add_item: "إضافة منتج", item: "المنتج", cost: "التكلفة", price: "سعر البيع", stock: "الرصيد", save: "حفظ"
-            },
-            en: {
-                menu_dash: "Dashboard", menu_items: "Products", menu_in: "Inbound", menu_out: "Outbound", menu_reports: "Reports", menu_settings: "Settings", menu_help: "Help", logout: "Logout",
-                total_items: "Total Products", stock_value: "Inventory Value", low_stock: "Low Stock",
-                add_item: "Add Product", item: "Product", cost: "Cost", price: "Price", stock: "Stock", save: "Save"
-            }
-        };
+        // Data State
+        let db = { items: [], trans: [], audits: [] };
 
-        let db = { items: [], trans: [], settings: { lang: 'ar', curr: 'SAR', dark: false } };
-        let chartInstance = null;
-
-        // --- Init ---
+        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            // Load Data
-            const stored = localStorage.getItem('nexus_diamond_db');
+            const stored = localStorage.getItem('nexus_erp_db');
             if(stored) db = JSON.parse(stored);
-            if(!db.settings) db.settings = { lang: 'ar', curr: 'SAR', dark: false };
-
-            // Set Date
-            const dateOpts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date').innerText = new Date().toLocaleDateString(db.settings.lang === 'ar' ? 'ar-EG' : 'en-US', dateOpts);
             
-            // Set Defaults
-            document.getElementById('in_date').valueAsDate = new Date();
-            document.getElementById('out_date').valueAsDate = new Date();
-            
-            // Init UI
-            document.getElementById('set_lang').value = db.settings.lang;
-            document.getElementById('set_curr').value = db.settings.curr;
-            document.getElementById('set_theme').checked = db.settings.dark;
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('in_date').value = today;
+            document.getElementById('out_date').value = today;
+            document.getElementById('date-display').innerText = new Date().toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 
-            applySettings();
             renderAll();
         });
 
-        // --- Core Functions ---
-        function saveData() {
-            localStorage.setItem('nexus_diamond_db', JSON.stringify(db));
+        function saveDB() {
+            localStorage.setItem('nexus_erp_db', JSON.stringify(db));
+            renderAll();
         }
 
-        function saveSettings() {
-            db.settings.lang = document.getElementById('set_lang').value;
-            db.settings.curr = document.getElementById('set_curr').value;
-            db.settings.dark = document.getElementById('set_theme').checked;
-            saveData();
-            location.reload();
-        }
-
-        function applySettings() {
-            const s = db.settings;
-            document.documentElement.lang = s.lang;
-            document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
-            
-            const css = s.lang === 'ar' 
-                ? "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" 
-                : "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
-            document.getElementById('bootstrap-css').href = css;
-
-            document.body.setAttribute('data-theme', s.dark ? 'dark' : 'light');
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const k = el.getAttribute('data-i18n');
-                if(i18n[s.lang][k]) el.innerText = i18n[s.lang][k];
-            });
-        }
-
+        // Navigation
         function nav(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
             if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('active');
         }
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function openModal(id) { new bootstrap.Modal(document.getElementById(id)).show(); }
-        function logout() { location.reload(); }
-
-        // --- Render Logic ---
-        function renderAll() {
-            const curr = db.settings.curr;
-
-            // 1. Items Table with Visual Indicators
-            const tbody = document.querySelector('#itemsTable tbody');
-            tbody.innerHTML = db.items.map(i => {
-                const status = i.stock <= i.min ? 'low' : (i.stock < i.min*3 ? 'med' : 'high');
-                const statusText = status === 'low' ? 'منخفض' : (status === 'med' ? 'متوسط' : 'جيد');
-                const percent = Math.min((i.stock / (i.min * 4)) * 100, 100);
-                
-                return `
-                <tr>
-                    <td class="fw-bold">${i.name}</td>
-                    <td>${i.cost} <small class="text-muted">${curr}</small></td>
-                    <td>${i.price} <small class="text-muted">${curr}</small></td>
-                    <td style="min-width: 180px;">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="stock-pill ${status}">${statusText}</span>
-                            <span class="fw-bold">${i.stock}</span>
-                        </div>
-                        <div class="progress-slim">
-                            <div class="progress-bar-slim" style="width: ${percent}%; background-color: ${status === 'low' ? '#ef4444' : (status === 'med' ? '#f59e0b' : '#10b981')}"></div>
-                        </div>
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-light text-danger rounded-circle" onclick="delItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('');
-
-            // 2. Dashboard Stats
-            document.getElementById('d-items').innerText = db.items.length;
-            const val = db.items.reduce((a,b) => a + (b.stock * b.cost), 0);
-            document.getElementById('d-value').innerText = val.toLocaleString() + ' ' + curr;
-            document.getElementById('d-low').innerText = db.items.filter(i => i.stock <= i.min).length;
-            
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('d_today').innerText = db.trans.filter(t => t.date === today).length;
-
-            // 3. Recent Activity
-            const recentDiv = document.getElementById('recent-activity-list');
-            const recentTrans = db.trans.slice().reverse().slice(0, 5);
-            recentDiv.innerHTML = recentTrans.length ? recentTrans.map(t => `
-                <div class="d-flex align-items-center p-3 rounded border bg-light">
-                    <div class="stat-icon-box ${t.type==='in'?'bg-soft-success':'bg-soft-warning'} me-3" style="width:40px; height:40px; font-size:1rem;">
-                        <i class="fa-solid ${t.type==='in'?'fa-arrow-down':'fa-arrow-up'}"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h6 class="m-0 fw-bold">${t.itemName}</h6>
-                        <small class="text-muted">${t.date} • ${t.ref}</small>
-                    </div>
-                    <div class="fw-bold ${t.type==='in'?'text-success':'text-danger'}">
-                        ${t.type==='in'?'+':'-'}${t.qty}
-                    </div>
-                </div>
-            `).join('') : '<p class="text-muted text-center">لا توجد عمليات حديثة</p>';
-
-            // 4. Report Table
-            document.querySelector('#reportTable tbody').innerHTML = db.trans.slice().reverse().map(t => `
-                <tr>
-                    <td><span class="badge ${t.type==='in'?'bg-success':'bg-warning'}">${t.type==='in'?'وارد':'صادر'}</span></td>
-                    <td>${t.itemName}</td>
-                    <td class="fw-bold">${t.qty}</td>
-                    <td>${t.date}</td>
-                    <td>${t.ref}</td>
-                </tr>
-            `).join('');
-
-            // 5. Selects
-            const opts = '<option value="">اختر...</option>' + db.items.map(i => `<option value="${i.id}">${i.name} (رصيد: ${i.stock})</option>`).join('');
-            document.getElementById('in_item').innerHTML = opts;
-            document.getElementById('out_item').innerHTML = opts;
-
-            renderChart();
-        }
-
-        // --- Chart ---
-        function renderChart() {
-            const ctx = document.getElementById('mainChart').getContext('2d');
-            if(chartInstance) chartInstance.destroy();
-
-            // Prepare Data: Top 5 Items by Value
-            const sorted = [...db.items].sort((a,b) => (b.stock*b.cost) - (a.stock*a.cost)).slice(0, 8);
-            
-            // Gradient
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.5)'); // Indigo
-            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
-
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sorted.map(i => i.name),
-                    datasets: [{
-                        label: 'قيمة المخزون',
-                        data: sorted.map(i => i.stock * i.cost),
-                        borderColor: '#4f46e5',
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: '#4f46e5'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#e2e8f0' } },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        // --- Logic ---
+        // 1. Items Logic
         document.getElementById('itemForm').addEventListener('submit', e => {
             e.preventDefault();
             db.items.push({
                 id: Date.now(),
+                sku: document.getElementById('m_sku').value,
                 name: document.getElementById('m_name').value,
+                unit: document.getElementById('m_unit').value,
                 cost: parseFloat(document.getElementById('m_cost').value),
-                price: parseFloat(document.getElementById('m_price').value),
+                price: parseFloat(document.getElementById('m_price').value) || 0,
                 min: parseInt(document.getElementById('m_min').value),
+                loc: document.getElementById('m_loc').value,
+                note: document.getElementById('m_note').value,
                 stock: 0
             });
-            saveData();
+            saveDB();
             bootstrap.Modal.getInstance(document.getElementById('itemModal')).hide();
-            Swal.fire({ icon: 'success', title: 'تم الحفظ', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
-            renderAll();
             e.target.reset();
         });
 
+        function renderItems() {
+            // Main Items Table
+            document.querySelector('#itemsTable tbody').innerHTML = db.items.map(i => `
+                <tr>
+                    <td><span class="badge bg-light text-dark border">${i.sku}</span></td>
+                    <td class="fw-bold">${i.name}</td>
+                    <td>${i.unit}</td>
+                    <td>${i.loc || '-'}</td>
+                    <td>${i.cost}</td>
+                    <td>${i.price}</td>
+                    <td>${i.min}</td>
+                    <td class="small text-muted">${i.note || '-'}</td>
+                    <td><span class="badge ${i.stock <= i.min ? 'badge-soft-danger' : 'badge-soft-success'} fs-6">${i.stock}</span></td>
+                    <td><button class="btn btn-sm text-danger" onclick="delItem(${i.id})"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+
+            // Selects
+            const opts = '<option value="">اختر...</option>' + db.items.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
+            document.getElementById('in_item').innerHTML = opts;
+            document.getElementById('out_item').innerHTML = opts;
+            document.getElementById('audit_item').innerHTML = opts;
+        }
+
+        function delItem(id) { if(confirm('حذف؟')) { db.items = db.items.filter(x=>x.id!=id); saveDB(); } }
+
+        // 2 & 3. Inbound / Outbound Logic
+        function fillDetails(type) {
+            const id = document.getElementById(type+'_item').value;
+            const item = db.items.find(i => i.id == id);
+            if(item) {
+                document.getElementById(type+'_sku').value = item.sku;
+                if(type === 'in') document.getElementById('in_cost').value = item.cost;
+                if(type === 'out') document.getElementById('out_price').value = item.price;
+            }
+            calcTotal(type);
+        }
+
+        function calcTotal(type) {
+            const qty = parseFloat(document.getElementById(type+'_qty').value) || 0;
+            const price = parseFloat(document.getElementById(type==='in'?'in_cost':'out_price').value) || 0;
+            document.getElementById(type+'_total').value = (qty * price).toFixed(2);
+        }
+
         const handleTrans = (type) => {
             const id = document.getElementById(type+'_item').value;
-            const qty = parseInt(document.getElementById(type+'_qty').value);
-            const price = parseFloat(document.getElementById(type==='in'?'in_cost':'out_price').value);
-            const ref = document.getElementById(type+'_ref').value;
-            const date = document.getElementById(type+'_date').value;
-
             const item = db.items.find(x => x.id == id);
-            if(type === 'out' && item.stock < qty) return Swal.fire('خطأ', 'الرصيد غير كافٍ', 'error');
+            const qty = parseFloat(document.getElementById(type+'_qty').value);
+            const price = parseFloat(document.getElementById(type==='in'?'in_cost':'out_price').value);
+            
+            if(type === 'out' && item.stock < qty) return alert('خطأ: الرصيد لا يكفي!');
 
-            item.stock += (type==='in' ? qty : -qty);
-            if(type==='in') item.cost = price;
+            item.stock += (type === 'in' ? qty : -qty);
+            // Update cost on entry
+            if(type === 'in') item.cost = price;
 
-            db.trans.push({ type, itemName: item.name, qty, date, ref });
-            saveData();
+            db.trans.push({
+                id: Date.now(),
+                type,
+                date: document.getElementById(type+'_date').value,
+                ref: document.getElementById(type+'_ref').value,
+                party: document.getElementById(type+'_party').value, // Supplier or Customer
+                itemId: id, itemName: item.name,
+                qty, price, total: qty * price,
+                notes: document.getElementById(type+'_notes').value
+            });
+            saveDB();
             document.getElementById(type+'Form').reset();
-            Swal.fire({ icon: 'success', title: 'تمت العملية', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
-            renderAll();
+            alert('تمت العملية بنجاح');
         };
         document.getElementById('inForm').addEventListener('submit', e=>{ e.preventDefault(); handleTrans('in'); });
         document.getElementById('outForm').addEventListener('submit', e=>{ e.preventDefault(); handleTrans('out'); });
 
-        function delItem(id) {
-            Swal.fire({ title: 'حذف؟', icon: 'warning', showCancelButton: true }).then(r => {
-                if(r.isConfirmed) { db.items = db.items.filter(x=>x.id!==id); saveData(); renderAll(); }
-            });
+        // 4. Daily Stock Logic
+        function renderStockTable() {
+            const today = new Date().toISOString().split('T')[0];
+            const tbody = document.querySelector('#stockTable tbody');
+            
+            tbody.innerHTML = db.items.map(item => {
+                // Filter today's transactions
+                const todayIn = db.trans.filter(t => t.itemId == item.id && t.type == 'in' && t.date == today).reduce((a,b)=>a+b.qty, 0);
+                const todayOut = db.trans.filter(t => t.itemId == item.id && t.type == 'out' && t.date == today).reduce((a,b)=>a+b.qty, 0);
+                const openBal = item.stock - todayIn + todayOut; // Approximation of opening balance
+
+                return `<tr>
+                    <td>${item.name} (${item.sku})</td>
+                    <td>${item.loc || '-'}</td>
+                    <td>${openBal}</td>
+                    <td class="text-success fw-bold">+${todayIn}</td>
+                    <td class="text-danger fw-bold">-${todayOut}</td>
+                    <td class="fw-bold bg-light">${item.stock}</td>
+                </tr>`;
+            }).join('');
         }
 
-        function exportExcel() {
-            let html = document.getElementById('itemsTable').outerHTML;
-            let a = document.createElement("a");
-            a.href = URL.createObjectURL(new Blob([html], { type: "application/vnd.ms-excel" }));
-            a.download = "inventory.xls"; a.click();
+        // 5. Audit Logic
+        function fillAuditSys() {
+            const id = document.getElementById('audit_item').value;
+            const item = db.items.find(x => x.id == id);
+            document.getElementById('audit_sys').value = item ? item.stock : '';
+            calcDiff();
+        }
+        function calcDiff() {
+            const sys = parseFloat(document.getElementById('audit_sys').value) || 0;
+            const act = parseFloat(document.getElementById('audit_actual').value) || 0;
+            const diff = act - sys;
+            document.getElementById('audit_diff').value = diff;
+            document.getElementById('audit_diff').style.color = diff < 0 ? 'red' : (diff > 0 ? 'green' : 'black');
+        }
+        document.getElementById('auditForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('audit_item').value;
+            const item = db.items.find(x => x.id == id);
+            const act = parseFloat(document.getElementById('audit_actual').value);
+            const diff = parseFloat(document.getElementById('audit_diff').value);
+            
+            db.audits.push({
+                itemName: item.name,
+                sys: item.stock, actual: act, diff: diff,
+                status: diff==0?'مطابق':(diff>0?'زيادة':'نقص'),
+                reason: document.getElementById('audit_reason').value,
+                user: document.getElementById('audit_user').value,
+                date: new Date().toLocaleDateString('ar-EG')
+            });
+            
+            // Auto correct stock
+            item.stock = act;
+            saveDB();
+            e.target.reset();
+            alert('تم اعتماد الجرد وتصحيح الرصيد');
+        });
+
+        function renderAudits() {
+            document.querySelector('#auditTable tbody').innerHTML = db.audits.slice().reverse().map(a => `
+                <tr><td>${a.itemName}</td><td>${a.sys}</td><td>${a.actual}</td>
+                <td style="color:${a.diff<0?'red':(a.diff>0?'green':'black')}">${a.diff}</td>
+                <td>${a.status}</td><td>${a.reason}</td><td>${a.user}</td><td>${a.date}</td></tr>
+            `).join('');
         }
 
-        function globalSearch(val) {
-            const filter = val.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
-            rows.forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
-            });
+        // 6. Reports Logic
+        function filterReport(type) {
+            const container = document.getElementById('report-results');
+            const table = document.getElementById('report-table-body');
+            container.classList.remove('d-none');
+            
+            let html = '';
+            if(type === 'all') {
+                document.getElementById('report-title').innerText = 'تقرير المخزون الحالي';
+                html = `<thead><tr><th>الصنف</th><th>الرصيد</th><th>التكلفة</th><th>الإجمالي</th></tr></thead><tbody>` +
+                db.items.map(i => `<tr><td>${i.name}</td><td>${i.stock}</td><td>${i.cost}</td><td>${(i.stock*i.cost).toLocaleString()}</td></tr>`).join('') + `</tbody>`;
+            } else if (type === 'in' || type === 'out') {
+                document.getElementById('report-title').innerText = type === 'in' ? 'تقرير المشتريات' : 'تقرير المبيعات';
+                const list = db.trans.filter(t => t.type === type);
+                html = `<thead><tr><th>التاريخ</th><th>المرجع</th><th>الطرف</th><th>الصنف</th><th>الكمية</th><th>الإجمالي</th></tr></thead><tbody>` +
+                list.map(t => `<tr><td>${t.date}</td><td>${t.ref}</td><td>${t.party}</td><td>${t.itemName}</td><td>${t.qty}</td><td>${t.total}</td></tr>`).join('') + `</tbody>`;
+            } else if (type === 'low') {
+                document.getElementById('report-title').innerText = 'تقرير النواقص';
+                const list = db.items.filter(i => i.stock <= i.min);
+                html = `<thead><tr><th>الصنف</th><th>الرصيد الحالي</th><th>الحد الأدنى</th></tr></thead><tbody>` +
+                list.map(i => `<tr><td>${i.name}</td><td class="text-danger fw-bold">${i.stock}</td><td>${i.min}</td></tr>`).join('') + `</tbody>`;
+            }
+            table.innerHTML = html;
+        }
+
+        // 7. Documents Logic (Stub)
+        function printTemplate(docName) {
+            alert('سيتم الآن فتح نموذج الطباعة لـ: ' + docName);
+            window.print();
+        }
+
+        // Dashboard Stats
+        function renderStats() {
+            document.getElementById('d-items').innerText = db.items.length;
+            const val = db.items.reduce((a,b) => a + (b.stock * b.cost), 0);
+            document.getElementById('d-value').innerText = val.toLocaleString() + ' ريال';
+            document.getElementById('d-low').innerText = db.items.filter(i => i.stock <= i.min).length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('d-today').innerText = db.trans.filter(t => t.date === today).length;
+
+            // Last transactions table
+            document.querySelector('#dash-table tbody').innerHTML = db.trans.slice().reverse().slice(0,5).map(t => `
+                <tr>
+                    <td><span class="badge ${t.type==='in'?'bg-success':'bg-warning'}">${t.type==='in'?'إدخال':'إخراج'}</span></td>
+                    <td>${t.date}</td><td>${t.ref}</td><td>${t.party}</td><td>${t.itemName}</td><td>${t.qty}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAll() {
+            renderItems();
+            renderStockTable();
+            renderAudits();
+            renderStats();
         }
     </script>
 </body>
+</html>
 </html>
