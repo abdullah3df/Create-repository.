@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus ERP | Executive Edition</title>
+    <title>Nexus ERP | Executive Final</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght=400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.com/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
-            /* Executive Emerald Palette */
+            /* Executive Emerald Palette (Finalized) */
             --primary: #059669; 
             --primary-dark: #047857;
             --primary-light: #d1fae5;
@@ -54,7 +54,7 @@
         .section { display: none; animation: fadeInUp 0.5s; }
         .section.active { display: block; }
         
-        /* NEW: Interactive Menu Tiles */
+        /* Dashboard Tiles (Visual Fix) */
         .menu-tile {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -64,10 +64,6 @@
             transition: all 0.3s ease;
             cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         .menu-tile:hover {
             transform: translateY(-5px);
@@ -84,6 +80,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
+            .main-content { margin-right: 0; padding: 15px; }
         }
     </style>
 </head>
@@ -158,29 +161,25 @@
             <h4 class="fw-bold m-0 mb-4" id="current-title" style="color:var(--primary)">لوحة القيادة</h4>
 
             <section id="dashboard" class="section active">
-                <h5 class="fw-bold mb-4" data-i18n="quick_access_title">اختصارات الوصول السريع</h5>
+                <h5 class="fw-bold mb-4" data-i18n="kpi_title">المؤشرات المالية والمخزنية الرئيسية</h5>
                 <div class="row g-4 mb-5">
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-primary"><p class="text-muted small mb-1" data-i18n="stock_value">قيمة المخزون الإجمالية</p><h3 class="fw-bold" id="d-stock-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-success"><p class="text-muted small mb-1" data-i18n="sales_value">إجمالي قيمة المبيعات</p><h3 class="fw-bold text-success" id="d-sales-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-danger"><p class="text-muted small mb-1" data-i18n="cogs_value">إجمالي تكلفة المبيعات (COGS)</p><h3 class="fw-bold text-danger" id="d-cogs-value">0</h3></div></div>
+                    <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-info"><p class="text-muted small mb-1" data-i18n="gross_margin">هامش الربح الإجمالي</p><h3 class="fw-bold text-info" id="d-margin-value">0</h3></div></div>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-8"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="movement_chart">حركة الوارد والصادر (آخر 7 أيام)</h5><canvas id="movementChart" style="max-height: 350px;"></canvas></div></div>
+                    <div class="col-lg-4"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="stock_health">حالة المخزون (بالكمية)</h5><canvas id="stockHealthChart" style="max-height: 350px;"></canvas></div></div>
+                </div>
+
+                <h5 class="fw-bold mb-4" data-i18n="quick_access_title">اختصارات الوصول السريع</h5>
+                 <div class="row g-4">
                     <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('inbound', document.querySelector('[data-i18n=\"menu_in\"]'))"><div class="tile-icon"><i class="fa-solid fa-arrow-right-to-bracket"></i></div><h6 class="fw-bold m-0" data-i18n="menu_in">إدخال (وارد)</h6></div></div>
                     <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('outbound', document.querySelector('[data-i18n=\"menu_out\"]'))"><div class="tile-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div><h6 class="fw-bold m-0" data-i18n="menu_out">إخراج (صرف)</h6></div></div>
                     <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('items', document.querySelector('[data-i18n=\"menu_items\"]'))"><div class="tile-icon"><i class="fa-solid fa-box-open"></i></div><h6 class="fw-bold m-0" data-i18n="menu_items">إدارة الأصناف</h6></div></div>
                     <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('reports', document.querySelector('[data-i18n=\"menu_reports\"]'))"><div class="tile-icon"><i class="fa-solid fa-chart-line"></i></div><h6 class="fw-bold m-0" data-i18n="menu_reports">التقارير</h6></div></div>
-                    <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('audit', document.querySelector('[data-i18n=\"menu_audit\"]'))"><div class="tile-icon"><i class="fa-solid fa-clipboard-check"></i></div><h6 class="fw-bold m-0" data-i18n="menu_audit">الجرد الشهري</h6></div></div>
-                    <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('stock', document.querySelector('[data-i18n=\"menu_stock\"]'))"><div class="tile-icon"><i class="fa-solid fa-warehouse"></i></div><h6 class="fw-bold m-0" data-i18n="menu_stock">المخزون اليومي</h6></div></div>
-                    <div class="col-md-4 col-lg-3"><div class="menu-tile" onclick="nav('docs', document.querySelector('[data-i18n=\"menu_docs\"]'))"><div class="tile-icon"><i class="fa-solid fa-folder-open"></i></div><h6 class="fw-bold m-0" data-i18n="menu_docs">المستندات</h6></div></div>
-                </div>
-
-                <div class="card-box p-4 border-start border-4 mb-4" style="border-color: var(--primary) !important;">
-                    <h5 class="fw-bold mb-3" data-i18n="kpi_title">نظرة عامة على المؤشرات المالية (للتنفيذ السريع)</h5>
-                    <div class="row">
-                        <div class="col-md-4"><p class="text-muted small mb-1" data-i18n="stock_value">قيمة المخزون</p><h4 class="fw-bold" id="d-stock-value">0 SAR</h4></div>
-                        <div class="col-md-4"><p class="text-muted small mb-1" data-i18n="sales_value">إجمالي المبيعات</p><h4 class="fw-bold text-success" id="d-sales-value">0 SAR</h4></div>
-                        <div class="col-md-4"><p class="text-muted small mb-1" data-i18n="gross_margin">هامش الربح</p><h4 class="fw-bold text-info" id="d-margin-value">0 SAR</h4></div>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-lg-8"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="movement_chart">حركة الوارد والصادر (آخر 7 أيام)</h5><canvas id="movementChart" style="max-height: 300px;"></canvas></div></div>
-                    <div class="col-lg-4"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="stock_health">حالة المخزون (بالكمية)</h5><canvas id="stockHealthChart" style="max-height: 300px;"></canvas></div></div>
                 </div>
             </section>
 
@@ -269,7 +268,7 @@
             <div class="modal-content search-modal-content border-0 shadow-lg">
                 <div class="modal-body p-4">
                     <div class="input-group">
-                        <span class="input-group-text bg-white border-0 py-4"><i class="fa-solid fa-magnifying-glass fa-xl text-primary" style="color:var(--primary) !important;"></i></span>
+                        <span class="input-group-text bg-white border-0 py-4"><i class="fa-solid fa-magnifying-glass fa-xl" style="color:var(--primary) !important;"></i></span>
                         <input type="text" class="form-control search-modal-input" id="search-input-modal" placeholder="ابحث عن صنف، رقم فاتورة، مرجع أو اسم مورد/عميل...">
                         <button type="button" class="btn btn-outline-secondary border-0" data-bs-dismiss="modal">إغلاق (Esc)</button>
                     </div>
@@ -354,18 +353,6 @@
 
             showWelcome(); 
             renderAll();
-            
-            // Event listener for global search modal activation
-            document.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    if (document.getElementById('app-interface').style.display !== 'none') {
-                        const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
-                        searchModal.show();
-                        setTimeout(() => document.getElementById('search-input-modal').focus(), 100);
-                    }
-                }
-            });
         });
 
         // --- NAVIGATION & SIDEBAR FIX ---
@@ -418,7 +405,6 @@
 
         // --- CHART LOGIC ---
         function initCharts() {
-            // Check if containers exist before destroying/creating charts
             if (!document.getElementById('movementChart') || !document.getElementById('stockHealthChart')) return;
             
             const dummyData = Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 5);
@@ -487,9 +473,10 @@
 
         // --- Renderers ---
         function renderAll() {
-            // ... (Render logic for selects, KPIs, etc.)
+            const opts = '<option value="">اختر...</option>' + db.items.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
+            document.getElementById('in_item').innerHTML = opts;
+            document.getElementById('out_item').innerHTML = opts;
 
-            // Calculate Financial KPIs
             let totalSales = 0;
             let totalCOGS = 0;
             let totalStockValue = db.items.reduce((sum, i) => sum + (i.stock * i.cost), 0);
@@ -506,7 +493,6 @@
             document.getElementById('d-cogs-value').innerText = totalCOGS.toLocaleString() + ' ' + currency;
             document.getElementById('d-margin-value').innerText = (totalSales - totalCOGS).toLocaleString() + ' ' + currency;
 
-            // Rerender charts if dashboard is active
             if(document.getElementById('dashboard').classList.contains('active')) initCharts();
         }
 
@@ -530,7 +516,7 @@
              renderAll();
         }
 
-        // --- Search Logic (Inside Modal) ---
+        // --- Search Logic ---
         document.getElementById('search-input-modal').addEventListener('keyup', liveSearch);
         
         function liveSearch() {
@@ -543,8 +529,12 @@
                 return;
             }
 
-            const itemResults = db.items.filter(i => i.name.toLowerCase().includes(query) || i.sku.toLowerCase().includes(query));
-            const transResults = db.trans.filter(t => t.ref.toLowerCase().includes(query) || t.itemName.toLowerCase().includes(query) || t.party.toLowerCase().includes(query)).slice(0, 10);
+            const itemResults = db.items.filter(i => 
+                i.name.toLowerCase().includes(query) || i.sku.toLowerCase().includes(query)
+            );
+            const transResults = db.trans.filter(t => 
+                t.ref.toLowerCase().includes(query) || t.itemName.toLowerCase().includes(query) || t.party.toLowerCase().includes(query)
+            ).slice(0, 10);
             
             if (itemResults.length) {
                 html += `<h6><i class="fa-solid fa-box-open me-2 text-primary"></i> نتائج الأصناف (${itemResults.length})</h6><ul class="list-group mb-3">`;
