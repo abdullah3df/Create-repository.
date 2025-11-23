@@ -24,8 +24,8 @@
             --bg-body: #ffffff;
             --bg-card: #f9fafb;
             --sidebar-width: 260px;
-            --shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Shadow slightly deeper */
-            --border-color: #e5e7eb; /* Lighter border for clean look */
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --border-color: #e5e7eb;
         }
 
         [data-theme="dark"] {
@@ -45,12 +45,12 @@
             transition: all 0.3s; 
             color: var(--secondary-text); 
             overflow-x: hidden;
-            opacity: 0; /* Hidden until content loads */
+            opacity: 0;
         }
         body.loaded { opacity: 1; }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
 
-        /* Preloader Style (New Feature) */
+        /* Preloader Style */
         #preloader {
             position: fixed; inset: 0; z-index: 10000;
             background-color: var(--bg-body);
@@ -67,7 +67,7 @@
         .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; right: 0; background-color: var(--bg-card); box-shadow: var(--shadow); border-left: 1px solid var(--border-color); z-index: 1000; padding: 20px; transition: all 0.3s; display: flex; flex-direction: column;}
         .brand { 
             font-size: 1.5rem; font-weight: 700; color: var(--primary); 
-            margin-bottom: 25px; padding: 5px 15px; cursor: pointer; /* Interactive brand */
+            margin-bottom: 25px; padding: 5px 15px; cursor: pointer;
             border-bottom: 1px solid var(--border-color); padding-bottom: 15px;
         }
         .main-content { margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; padding-top: 20px; }
@@ -87,7 +87,7 @@
         .nav-link i { width: 20px; margin-left: 10px; color: var(--secondary-text); transition: color 0.2s; }
         .nav-link.active i { color: var(--primary); }
         
-        /* Dashboard Tiles - Enhanced Hover Effect */
+        /* Dashboard Tiles */
         .menu-tile {
             border: 1px solid var(--border-color);
             border-radius: 12px; padding: 25px; text-align: center; transition: all 0.3s ease; cursor: pointer;
@@ -102,7 +102,7 @@
             font-size: 2.5rem; margin-bottom: 15px;
             background: var(--primary-light);
             color: var(--primary);
-            width: 65px; height: 65px; /* Slightly larger */
+            width: 65px; height: 65px;
             border-radius: 50%; display: inline-flex;
             align-items: center; justify-content: center;
         }
@@ -125,7 +125,9 @@
         .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 0.25rem var(--primary-light); }
     </style>
 </head>
-<body class="loaded"> <div id="preloader">
+<body class="loaded">
+
+    <div id="preloader">
         <div class="text-center">
             <div class="spinner-border" role="status"></div>
             <p class="text-muted mt-3 fw-bold">جاري تحميل نظام Nexus ERP...</p>
@@ -249,6 +251,20 @@
                 </div>
             </section>
 
+             <section id="items" class="section">
+                <div class="card-box">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-primary">4. إدارة الأصناف</h4>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#itemModal">
+                            <i class="fa-solid fa-plus me-2"></i> إضافة صنف جديد
+                        </button>
+                    </div>
+                    
+                    <div id="items-table-container">
+                         </div>
+                </div>
+            </section>
+
              <section id="settings" class="section">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
@@ -268,18 +284,34 @@
                     </div>
                 </div>
             </section>
-
-             <section id="help" class="section"><div class="card-box"><h4>التعليمات</h4><p>محتوى تعليمي.</p></div></section>
+            <section id="help" class="section"><div class="card-box"><h4>التعليمات</h4><p>محتوى تعليمي.</p></div></section>
             <section id="about" class="section"><div class="card-box"><h4>عن Nexus ERP</h4><p>تفاصيل النظام.</p></div></section>
             <section id="stock" class="section"><div class="card-box"><h4>قائمة المخزون اليومي</h4><p>جدول المخزون</p></div></section>
-            <section id="items" class="section"><div class="card-box"><h4>إدارة الأصناف</h4><p>جدول الأصناف</p></div></section>
             <section id="outbound" class="section"><div class="card-box"><h4>قائمة الإخراج</h4><p>نموذج صرف</p></div></section>
             <section id="audit" class="section"><div class="card-box"><h4>الجرد الشهري</h4><p>نموذج جرد</p></div></section>
             <section id="reports" class="section"><div class="card-box"><h4>التقارير</h4><p>لوحة التقارير</p></div></section>
             <section id="docs" class="section"><div class="card-box"><h4>المستندات</h4><p>نماذج الطباعة</p></div></section>
         </main>
         
-        <div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">إضافة صنف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="itemForm"><div class="mb-3"><label>اسم الصنف</label><input type="text" id="m_name" class="form-control" required></div><div class="mb-3"><label>SKU</label><input type="text" id="m_sku" class="form-control" required></div><div class="row"><div class="col-6"><label>التكلفة</label><input type="number" id="m_cost" class="form-control" required></div><div class="col-6"><label>البيع</label><input type="number" id="m_price" class="form-control"></div></div><div class="mt-3"><label>الحد الأدنى</label><input type="number" id="m_min" class="form-control" value="5"></div><div class="mt-3"><button type="submit" class="btn btn-primary w-100" style="background-color: var(--primary); border-color: var(--primary);">حفظ</button></div></form></div></div></div></div>
+        <div class="modal fade" id="itemModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title">إضافة صنف جديد</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <form id="itemForm">
+                            <div class="mb-3"><label>اسم الصنف</label><input type="text" id="m_name" class="form-control" required></div>
+                            <div class="mb-3"><label>SKU (رقم الصنف)</label><input type="text" id="m_sku" class="form-control" required></div>
+                            <div class="row">
+                                <div class="col-6"><label>تكلفة الوحدة</label><input type="number" id="m_cost" class="form-control" step="0.01" min="0" required></div>
+                                <div class="col-6"><label>سعر البيع</label><input type="number" id="m_price" class="form-control" step="0.01" min="0"></div>
+                            </div>
+                            <div class="mt-3"><label>الحد الأدنى للمخزون (للتنبيه)</label><input type="number" id="m_min" class="form-control" value="5" min="1"></div>
+                            <div class="mt-4"><button type="submit" class="btn btn-primary w-100" style="background-color: var(--primary); border-color: var(--primary);">حفظ الصنف</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     
@@ -305,7 +337,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // --- 10.1. CONFIGURATION & STATE (auth.js) ---
+        // --- 1. CONFIGURATION & STATE (مع إضافة بيانات وهمية) ---
         const i18n = { /* ... (Translations retained) ... */
             ar: {
                 app_title: "Nexus ERP", welcome_motto: "إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية", welcome_btn: "البدء وتسجيل الدخول", login_title: "تسجيل الدخول", login_welcome: "يرجى إدخال بيانات الوصول", login_btn: "دخول لوحة القيادة", search_global: "البحث السريع (Ctrl+K)", quick_access_title: "اختصارات الوصول السريع",
@@ -320,15 +352,49 @@
                 movement_chart: "Inbound/Outbound Movement (Last 7 Days)", stock_health: "Stock Health (By Quantity)", about_title: "About Nexus ERP System"
             }
         };
-
+        
+        // --- بيانات وهمية (Dummy Data) لعمل لوحة القيادة ---
+        const DUMMY_ITEMS = [
+            { id: 101, sku: "A1001", name: "كمبيوتر محمول Core i7", cost: 2500, price: 3200, min: 5, stock: 12, loc: "RACK-A" },
+            { id: 102, sku: "A1002", name: "طابعة ليزر متعددة الوظائف", cost: 650, price: 899, min: 10, stock: 4, loc: "RACK-B" }, // تحت الحد الأدنى
+            { id: 103, sku: "B2003", name: "شاشة عرض 27 بوصة 4K", cost: 1200, price: 1599, min: 8, stock: 25, loc: "RACK-C" },
+            { id: 104, sku: "B2004", name: "جهاز توجيه (Router) شبكي", cost: 150, price: 219, min: 20, stock: 18, loc: "RACK-A" }, // تحت الحد الأدنى
+            { id: 105, sku: "C3005", name: "هاتف مكتبي VoIP", cost: 350, price: 550, min: 15, stock: 50, loc: "RACK-D" },
+            { id: 106, sku: "C3006", name: "مجموعة لوحة مفاتيح وماوس لاسلكية", cost: 80, price: 125, min: 30, stock: 85, loc: "RACK-B" },
+            { id: 107, sku: "D4007", name: "كابل شبكة CAT6 (100 متر)", cost: 40, price: 65, min: 50, stock: 250, loc: "RACK-E" },
+            { id: 108, sku: "D4008", name: "قرص صلب SSD 1TB", cost: 200, price: 299, min: 10, stock: 11, loc: "RACK-C" },
+            { id: 109, sku: "E5009", name: "بطارية احتياطية (UPS) 1500VA", cost: 900, price: 1300, min: 3, stock: 9, loc: "RACK-D" },
+            { id: 110, sku: "E5010", name: "كاميرا مراقبة خارجية HD", cost: 300, price: 450, min: 10, stock: 1, loc: "RACK-A" } // نواقص حرجة
+        ];
+        
+        const DUMMY_TRANS = [
+            // معاملات وارد (Inbound)
+            { id: 1, type: 'in', date: '2025-11-01', ref: 'INV-001', party: 'المورد التقني', itemId: 101, itemName: 'كمبيوتر محمول Core i7', qty: 10, price: 2500, total: 25000, notes: 'شحنة أكتوبر' },
+            { id: 2, type: 'in', date: '2025-11-03', ref: 'INV-002', party: 'مؤسسة الكابلات', itemId: 107, itemName: 'كابل شبكة CAT6 (100 متر)', qty: 100, price: 40, total: 4000, notes: 'عقد توريد' },
+            { id: 3, type: 'in', date: '2025-11-05', ref: 'INV-003', party: 'المورد التقني', itemId: 103, itemName: 'شاشة عرض 27 بوصة 4K', qty: 20, price: 1200, total: 24000, notes: 'دخول بضاعة جديدة' },
+            // معاملات صادر (Outbound)
+            { id: 4, type: 'out', date: '2025-11-06', ref: 'SAL-001', party: 'شركة الأفق', itemId: 101, itemName: 'كمبيوتر محمول Core i7', qty: 5, price: 3200, total: 16000, notes: 'فاتورة مبيعات' },
+            { id: 5, type: 'out', date: '2025-11-07', ref: 'SAL-002', party: 'العميل الفردي', itemId: 103, itemName: 'شاشة عرض 27 بوصة 4K', qty: 2, price: 1599, total: 3198, notes: 'بيع نقدي' },
+            { id: 6, type: 'out', date: '2025-11-08', ref: 'SAL-003', party: 'مدرسة النجاح', itemId: 105, itemName: 'هاتف مكتبي VoIP', qty: 10, price: 550, total: 5500, notes: 'توريد هواتف' },
+            { id: 7, type: 'out', date: '2025-11-10', ref: 'SAL-004', party: 'شركة الأفق', itemId: 102, itemName: 'طابعة ليزر متعددة الوظائف', qty: 5, price: 899, total: 4495, notes: 'فاتورة مبيعات' },
+            { id: 8, type: 'out', date: '2025-11-12', ref: 'SAL-005', party: 'العميل الفردي', itemId: 107, itemName: 'كابل شبكة CAT6 (100 متر)', qty: 20, price: 65, total: 1300, notes: 'بيع نقدي' },
+            { id: 9, type: 'out', date: '2025-11-15', ref: 'SAL-006', party: 'مدرسة النجاح', itemId: 101, itemName: 'كمبيوتر محمول Core i7', qty: 3, price: 3200, total: 9600, notes: 'توريد أجهزة' },
+            { id: 10, type: 'in', date: '2025-11-17', ref: 'INV-004', party: 'مستودع الشرق', itemId: 105, itemName: 'هاتف مكتبي VoIP', qty: 30, price: 350, total: 10500, notes: 'شحنة عاجلة' },
+            { id: 11, type: 'out', date: '2025-11-18', ref: 'SAL-007', party: 'العميل الفردي', itemId: 106, itemName: 'مجموعة لوحة مفاتيح وماوس لاسلكية', qty: 10, price: 125, total: 1250, notes: 'بيع نقدي' },
+            { id: 12, type: 'out', date: '2025-11-20', ref: 'SAL-008', party: 'شركة الأفق', itemId: 103, itemName: 'شاشة عرض 27 بوصة 4K', qty: 8, price: 1599, total: 12792, notes: 'توسعة المكتب' },
+            { id: 13, type: 'out', date: '2025-11-21', ref: 'SAL-009', party: 'العميل الفردي', itemId: 108, itemName: 'قرص صلب SSD 1TB', qty: 4, price: 299, total: 1196, notes: 'بيع نقدي' },
+            { id: 14, type: 'out', date: '2025-11-22', ref: 'SAL-010', party: 'مدرسة النجاح', itemId: 109, itemName: 'بطارية احتياطية (UPS) 1500VA', qty: 1, price: 1300, total: 1300, notes: 'احتياطي طاقة' },
+        ];
+        
         let db = { 
-            items: [], 
-            trans: [], 
+            // سيتم استخدام البيانات الوهمية كقيم افتراضية
+            items: DUMMY_ITEMS, 
+            trans: DUMMY_TRANS, 
             settings: { lang: 'ar', curr: 'SAR', dark: false } 
         };
         let chartInstances = {};
         
-        // --- AUTHENTICATION FLOW ---
+        // --- AUTHENTICATION FLOW (Retained) ---
         function showWelcome() {
             document.getElementById('welcome-screen').style.display = 'flex';
             document.getElementById('login-screen').style.display = 'none';
@@ -346,7 +412,6 @@
             const password = document.getElementById('password').value;
             
             if (email === 'admin@nexus.com' && password === '123') {
-                // 11. UX: إخفاء شاشة تسجيل الدخول بطريقة احترافية
                 document.getElementById('login-screen').classList.add('animate__fadeOut');
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
@@ -356,32 +421,20 @@
                     nav('dashboard', document.querySelector('[data-i18n="menu_dash"]'));
                 }, 500);
             } else {
-                 // 12. UX/Stability: استخدام SweetAlert2
                  Swal.fire({ icon: 'error', title: 'خطأ في الدخول', text: 'بيانات الدخول غير صحيحة. (تجريبي: admin@nexus.com / 123)', customClass: { container: 'rtl' } });
             }
         }
         document.getElementById('login-form').addEventListener('submit', handleLogin);
         
         function logout() {
-            // 13. UX/Stability: استخدام SweetAlert2 لتأكيد الخروج
             Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "سيتم تسجيل خروجك من النظام.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#1d4ed8',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'نعم، تسجيل الخروج',
-                cancelButtonText: 'إلغاء',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.reload();
-                }
-            })
+                title: 'هل أنت متأكد؟', text: "سيتم تسجيل خروجك من النظام.", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#1d4ed8', cancelButtonColor: '#6b7280',
+                confirmButtonText: 'نعم، تسجيل الخروج', cancelButtonText: 'إلغاء', reverseButtons: true
+            }).then((result) => { if (result.isConfirmed) { location.reload(); } })
         }
 
-        // --- 10.2. INIT & LAYOUT (app.js) ---
+        // --- INIT & LAYOUT (Retained) ---
         function hidePreloader() {
             const preloader = document.getElementById('preloader');
             preloader.classList.add('fade-out');
@@ -390,7 +443,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // 14. Performance: إخفاء الواجهة حتى يتم تحميل البيانات
             document.body.classList.remove('loaded');
             
             try {
@@ -408,17 +460,14 @@
                 console.error("Initialization Error:", error);
                 Swal.fire({ title: 'خطأ', text: 'حدث خطأ أثناء تحميل البيانات المحلية. سيتم البدء بحالة افتراضية.', icon: 'error' });
                 showWelcome();
-                db = { items: [], trans: [], settings: { lang: 'ar', curr: 'SAR', dark: false } };
+                db = { items: DUMMY_ITEMS, trans: DUMMY_TRANS, settings: { lang: 'ar', curr: 'SAR', dark: false } }; // Fallback to dummy data
                 renderAll();
             }
             
             hidePreloader();
         });
 
-        // --- NAVIGATION & SIDEBAR FIX ---
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 
         function nav(id, element) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -426,7 +475,6 @@
             
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             if(element) {
-                // قد يكون العنصر هو span داخل nav-link، نصعد لـ nav-link
                 let navLink = element.closest('.nav-link') || element;
                 navLink.classList.add('active');
             }
@@ -439,11 +487,11 @@
             }
             
             if (id === 'dashboard') initCharts();
+            if (id === 'items') renderItemsTable(); // تأكد من تحديث الجدول عند التبديل
         }
 
-        // --- 10.3. SETTINGS (settings.js) ---
+        // --- SETTINGS (Retained) ---
         function applySettings(s) {
-            // 15. Performance: تبديل ملف Bootstrap CSS
             document.documentElement.lang = s.lang;
             document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
             const css = s.lang === 'ar' ? "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
@@ -465,17 +513,27 @@
             db.settings.curr = document.getElementById('set_curr').value.toUpperCase();
             db.settings.dark = document.getElementById('set_theme').checked;
             localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
-            location.reload(); // Reloading to fully apply RTL/LTR CSS changes
+            location.reload();
         }
 
-        // --- 10.4. CHART LOGIC (charts.js) ---
+        // --- CHART LOGIC (Retained) ---
         function initCharts() {
-            // 16. Stability: تحسين إدارة الأخطاء في الرسوم البيانية
-            try {
+             try {
                 if (!document.getElementById('movementChart') || !document.getElementById('stockHealthChart')) return;
                 
-                const dummyData = Array.from({ length: 7 }, () => Math.floor(Math.random() * 20) + 5);
-
+                // حساب حركة الوارد والصادر لآخر 7 أيام من البيانات الوهمية (لتكون أكثر دقة)
+                const last7Days = Array.from({ length: 7 }, (_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    return d.toISOString().split('T')[0];
+                }).reverse();
+                
+                const movementData = last7Days.map(date => {
+                    const inQty = db.trans.filter(t => t.type === 'in' && t.date === date).reduce((sum, t) => sum + t.qty, 0);
+                    const outQty = db.trans.filter(t => t.type === 'out' && t.date === date).reduce((sum, t) => sum + t.qty, 0);
+                    return { date, in: inQty, out: outQty };
+                });
+                
                 // 1. Movement Chart (Line)
                 const ctxMovement = document.getElementById('movementChart').getContext('2d');
                 const gradient = ctxMovement.createLinearGradient(0, 0, 0, 400);
@@ -486,24 +544,23 @@
                 chartInstances.movement = new Chart(ctxMovement, {
                     type: 'line',
                     data: {
-                        labels: ['يوم 1', 'يوم 2', 'يوم 3', 'يوم 4', 'يوم 5', 'يوم 6', 'يوم 7'],
+                        labels: last7Days,
                         datasets: [{
                             label: 'وارد',
-                            data: dummyData.map(d => d * 1.5),
+                            data: movementData.map(d => d.in),
                             borderColor: '#1d4ed8',
                             backgroundColor: gradient,
                             fill: true, tension: 0.4, pointRadius: 5
                         }, {
                             label: 'صادر',
-                            data: dummyData,
+                            data: movementData.map(d => d.out),
                             borderColor: '#f59e0b',
                             backgroundColor: 'rgba(245, 158, 11, 0.1)',
                             tension: 0.4, pointRadius: 5
                         }]
                     },
                     options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false,
+                        responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { position: 'top' } }, 
                         scales: { 
                             y: { beginAtZero: true, grid: { color: db.settings.dark ? '#374151' : '#f3f4f6' } },
@@ -524,31 +581,60 @@
                     data: {
                         labels: ['نواقص', 'متوسط', 'جيد'],
                         datasets: [{
-                            data: [lowCount, medCount > 0 ? medCount : 1, highCount], // Ensure at least 1 for visual feedback if 0
+                            data: [lowCount, medCount > 0 ? medCount : 1, highCount],
                             backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
                             hoverOffset: 10
                         }]
                     },
                     options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false,
+                        responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { position: 'bottom' } } 
                     }
                 });
             } catch (e) {
                 console.error("Chart initialization failed:", e);
-                // 17. Stability: رسالة تنبيه عند فشل الرسوم البيانية
-                document.getElementById('movementChart').parentNode.innerHTML = '<p class="text-danger text-center mt-5">تعذر تحميل الرسوم البيانية. الرجاء التحقق من اتصالك.</p>';
-                document.getElementById('stockHealthChart').parentNode.innerHTML = '<p class="text-danger text-center mt-5">تعذر تحميل الرسوم البيانية.</p>';
+                document.getElementById('movementChart').parentNode.innerHTML = '<p class="text-danger text-center mt-5">تعذر تحميل حركة المخزون.</p>';
+                document.getElementById('stockHealthChart').parentNode.innerHTML = '<p class="text-danger text-center mt-5">تعذر تحميل حالة المخزون.</p>';
             }
         }
         
         // --- WMS Logic (Simplified) ---
-        function handleBarcodeScan(sku) { /* ... (Barcode logic retained) ... */ }
-        function fillDetails(type) { /* ... (Fill details logic retained) ... */ }
-        function calcTotal(type) { /* ... (Calculate total logic retained) ... */ }
+        function handleBarcodeScan(sku) { 
+             // Logic to find item by SKU and fill form fields
+             const item = db.items.find(i => i.sku.toUpperCase() === sku.toUpperCase());
+             if (item) {
+                 // For inbound form
+                 document.getElementById('in_item').value = item.id;
+                 document.getElementById('in_sku').value = item.sku;
+                 document.getElementById('in_cost').value = item.cost;
+                 document.getElementById('in_qty').value = 1; // Default to 1
+                 calcTotal('in');
+                 document.getElementById('in_qty').focus();
+             }
+        }
+        
+        function fillDetails(type) {
+            const itemId = document.getElementById(type+'_item').value;
+            const item = db.items.find(i => i.id == itemId);
+            if(item) {
+                document.getElementById(type+'_sku').value = item.sku;
+                if(type === 'in') {
+                    document.getElementById('in_cost').value = item.cost;
+                } else {
+                     // document.getElementById('out_price').value = item.price; // إذا كان هناك سعر بيع في نموذج الصادر
+                }
+                calcTotal(type);
+            }
+        }
 
-        // --- 10.5. RENDERERS (data.js) ---
+        function calcTotal(type) {
+            const qty = parseFloat(document.getElementById(type+'_qty').value) || 0;
+            const priceOrCost = parseFloat(document.getElementById(type === 'in' ? 'in_cost' : 'in_cost').value) || 0;
+            const total = qty * priceOrCost;
+            document.getElementById(type+'_total').value = total.toLocaleString(db.settings.lang === 'ar' ? 'ar-SA' : 'en-US', { minimumFractionDigits: 2 });
+        }
+
+        // --- RENDERERS ---
         function renderAll() {
             try {
                 // Update Select Options
@@ -566,7 +652,7 @@
                     totalCOGS += t.qty * item.cost; 
                 });
 
-                // 18. UX: استخدام Intl.NumberFormat لتنسيق الأرقام والعملة بشكل احترافي
+                // Formatting
                 const formatter = new Intl.NumberFormat(db.settings.lang === 'ar' ? 'ar-SA' : 'en-US', {
                     style: 'currency',
                     currency: db.settings.curr,
@@ -580,6 +666,11 @@
                 document.getElementById('d-margin-value').innerText = formatter.format(totalSales - totalCOGS);
 
                 if(document.getElementById('dashboard').classList.contains('active')) initCharts();
+                
+                // تحديث جدول الأصناف إذا كنا في صفحة الأصناف
+                if (document.getElementById('items').classList.contains('active')) {
+                    renderItemsTable();
+                }
             } catch (e) {
                 console.error("Rendering failed:", e);
                 Swal.fire({ title: 'خطأ', text: 'فشل في عرض البيانات المالية الرئيسية.', icon: 'error', toast: true, position: 'top' });
@@ -590,33 +681,137 @@
         document.getElementById('inForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'in'); });
         
         function handleTransSubmit(e, type) {
-             // Add dummy item/transaction logic
-             if(db.items.length === 0) {
-                 db.items.push({ id: 101, sku: "123456", name: "صنف تجريبي", unit: "قطعة", cost: 10, price: 15, min: 5, loc: "A-01", note: "", stock: 100 });
-             }
-             
-             // Simple data collection
+             const itemId = document.getElementById(type+'_item').value;
              const qty = parseFloat(document.getElementById(type+'_qty').value);
-             const item = db.items[0]; 
-             
-             if (isNaN(qty) || qty <= 0) {
-                 Swal.fire({ icon: 'warning', title: 'خطأ في الكمية', text: 'يرجى إدخال كمية صحيحة.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+             const item = db.items.find(i => i.id == itemId);
+
+             if (!item || isNaN(qty) || qty <= 0) {
+                 Swal.fire({ icon: 'warning', title: 'خطأ في الإدخال', text: 'يرجى اختيار صنف وإدخال كمية صحيحة.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
                  return;
              }
              
+             // Update Stock
              item.stock += (type === 'in' ? qty : -qty);
-             db.trans.push({ id: Date.now(), type, date: document.getElementById(type+'_date').value, ref: document.getElementById(type+'_ref').value, party: document.getElementById(type+'_party').value, itemId: item.id, itemName: item.name, qty, price: type==='in'?item.cost:item.price, total: qty * (type==='in'?item.cost:item.price), notes: document.getElementById(type+'_notes').value });
+             
+             // Record Transaction
+             const priceOrCost = parseFloat(document.getElementById(type === 'in' ? 'in_cost' : 'in_cost').value);
+             db.trans.push({ 
+                 id: Date.now(), 
+                 type, 
+                 date: document.getElementById(type+'_date').value, 
+                 ref: document.getElementById(type+'_ref').value, 
+                 party: document.getElementById(type+'_party').value, 
+                 itemId: item.id, 
+                 itemName: item.name, 
+                 qty, 
+                 price: priceOrCost, 
+                 total: qty * priceOrCost, 
+                 notes: document.getElementById(type+'_notes').value 
+             });
 
              localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
              renderAll();
              
-             // 19. UX: استخدام SweetAlert2 لتأكيد العملية
              Swal.fire({ icon: 'success', title: 'تم تسجيل العملية بنجاح', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
              e.target.reset();
-             // إعادة تعيين التاريخ وتعبئة حقول فارغة
              const today = new Date().toISOString().split('T')[0];
              document.getElementById(type+'_date').value = today;
              document.getElementById('barcode_scan').focus();
+        }
+
+        // --- ITEM HANDLERS (إدارة الأصناف) ---
+        document.getElementById('itemForm').addEventListener('submit', handleItemSubmit);
+
+        function handleItemSubmit(e) {
+            e.preventDefault();
+
+            // 1. جمع البيانات
+            const name = document.getElementById('m_name').value.trim();
+            const sku = document.getElementById('m_sku').value.trim().toUpperCase();
+            const cost = parseFloat(document.getElementById('m_cost').value);
+            const price = parseFloat(document.getElementById('m_price').value) || cost * 1.3; // Default 30% margin
+            const minStock = parseInt(document.getElementById('m_min').value) || 5;
+
+            // 2. التحقق من صحة البيانات
+            if (!name || !sku || isNaN(cost) || cost < 0) {
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'الرجاء إدخال اسم الصنف، SKU، والتكلفة بشكل صحيح.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                return;
+            }
+            
+            // 3. إنشاء الصنف الجديد
+            const newItem = {
+                id: Date.now(),
+                sku: sku,
+                name: name,
+                cost: cost,
+                price: price,
+                min: minStock,
+                stock: 0,
+                loc: "NEW",
+                note: ""
+            };
+
+            // 4. حفظ الصنف
+            db.items.push(newItem);
+            localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
+
+            // 5. تحديث الواجهة والتنبيه
+            renderAll();
+            renderItemsTable();
+            
+            const modalElement = document.getElementById('itemModal');
+            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modal.hide();
+            
+            e.target.reset();
+
+            Swal.fire({ icon: 'success', title: 'تمت الإضافة', text: `تم تسجيل الصنف "${name}" بنجاح!`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2500 });
+        }
+
+        function renderItemsTable() {
+            const container = document.getElementById('items-table-container');
+            const currency = db.settings.curr;
+            
+            if (db.items.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center py-5">لم يتم إضافة أي أصناف بعد. اضغط على "إضافة صنف جديد" للبدء.</p>';
+                return;
+            }
+            
+            let html = `
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الصنف</th>
+                                <th>SKU</th>
+                                <th>المخزون الحالي</th>
+                                <th>التكلفة</th>
+                                <th>سعر البيع</th>
+                                <th>الحد الأدنى</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+            
+            db.items.forEach((i, index) => {
+                const stockClass = i.stock <= i.min ? 'text-danger fw-bold' : (i.stock < i.min * 2 ? 'text-warning' : 'text-success');
+                const stockIcon = i.stock <= i.min ? '<i class="fa-solid fa-triangle-exclamation ms-2"></i>' : '';
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${i.name}</td>
+                        <td>${i.sku}</td>
+                        <td class="${stockClass}">${i.stock} ${stockIcon}</td>
+                        <td>${i.cost.toFixed(2)} ${currency}</td>
+                        <td>${i.price.toFixed(2)} ${currency}</td>
+                        <td>${i.min}</td>
+                        <td><button class="btn btn-sm btn-outline-info disabled" title="غير مفعل بالنسخة التجريبية"><i class="fa-solid fa-pen"></i></button></td>
+                    </tr>`;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
         }
 
         // --- Search Logic (Retained) ---
