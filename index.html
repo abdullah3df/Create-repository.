@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus ERP | Executive Edition</title>
+    <title>Nexus ERP | Executive Search Edition</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,13 +14,12 @@
 
     <style>
         :root {
-            /* New Emerald Palette */
-            --primary: #059669; /* Deep Emerald Green */
+            /* Executive Emerald Palette */
+            --primary: #059669; 
             --primary-dark: #047857;
             --primary-light: #d1fae5;
-            --secondary-text: #4b5563; /* Slate/Gray */
-            --accent-blue: #3b82f6; /* Action Blue */
-            --bg-body: #f9fafb; /* Clean Background */
+            --secondary-text: #4b5563;
+            --bg-body: #f9fafb;
             --bg-card: #ffffff;
             --sidebar-width: 260px;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -28,7 +27,7 @@
         }
 
         [data-theme="dark"] {
-            --primary: #34d399; /* Lighter green for visibility */
+            --primary: #34d399;
             --primary-dark: #065f46;
             --primary-light: #102e26;
             --bg-body: #171717;
@@ -45,8 +44,20 @@
             overflow-x: hidden;
         }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
+        
+        /* --- AUTH SCREEN FIX: Softer look --- */
+        .auth-screen { 
+            position: fixed; inset: 0; z-index: 9999; 
+            background: var(--bg-body); /* Softer background */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .auth-box { 
+            background: var(--bg-card); padding: 40px; border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; 
+            border: 1px solid var(--border-color);
+        }
 
-        /* --- Header Structure (Clean & Structured) --- */
+        /* --- Header Structure (Clean Structure) --- */
         .header-main {
             display: flex;
             align-items: center;
@@ -59,18 +70,7 @@
             top: 0;
             z-index: 900;
         }
-        .header-logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-        .header-logo i {
-            /* Elegant, simple icon design */
-            background: var(--primary);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 6px;
-        }
+        .header-logo i { background: var(--primary); color: white; padding: 6px 10px; border-radius: 6px; }
 
         /* --- Sidebar & Nav --- */
         .sidebar { 
@@ -84,25 +84,34 @@
         .nav-link.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
         .nav-link i { color: var(--secondary-text); width: 20px; transition: color 0.2s; }
         .nav-link.active i { color: var(--primary); }
-
+        
         /* --- Main Content --- */
-        .main-content { 
-            margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; 
-            padding-top: 20px; 
+        .main-content { margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; padding-top: 20px; }
+        .section { display: none; animation: fadeInUp 0.5s; }
+        .section.active { display: block; }
+        
+        /* Search Modal Styles */
+        .search-modal-content {
+            background-color: var(--bg-card);
+            border-radius: 16px;
         }
-
-        /* --- Cards & Components --- */
-        .card-box { background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 20px; }
-        .stat-icon-box { background-color: var(--primary-light); color: var(--primary); }
-        .barcode-input { border: 2px solid var(--primary); box-shadow: 0 0 5px rgba(5, 150, 105, 0.5); }
+        .search-modal-input {
+            font-size: 1.5rem;
+            border: none;
+            box-shadow: none !important;
+        }
+        .search-results-box {
+            max-height: 400px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.active { transform: translateX(0); box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
             .main-content { margin-right: 0; padding: 15px; }
-            .header-main { padding: 10px 15px; }
-            .search-container-main { display: none; }
         }
     </style>
 </head>
@@ -112,7 +121,7 @@
         <div class="auth-box text-center animate__animated animate__fadeIn">
             <i class="fa-solid fa-seedling fa-4x mb-3" style="color:var(--primary)"></i>
             <h1 class="fw-bold mb-3" data-i18n="app_title">Nexus ERP</h1>
-            <p class="lead text-muted mb-4" data-i18n="welcome_motto">نظام إدارة المؤسسات المتكامل</p>
+            <p class="lead text-muted mb-4" data-i18n="welcome_motto">إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية</p>
             <button onclick="showLogin()" class="btn btn-primary w-100 py-2 fw-bold animate__animated animate__pulse animate__infinite" data-i18n="welcome_btn" style="background-color: var(--primary); border-color: var(--primary);">البدء وتسجيل الدخول</button>
             <div class="mt-4 text-muted small">© 2025 Nexus ERP.</div>
         </div>
@@ -144,12 +153,9 @@
                 </div>
             </div>
             
-            <div class="search-container-main d-none d-md-block">
-                <div class="input-group shadow-sm">
-                    <input type="text" class="form-control" placeholder="بحث عام (منتجات/مرجع)" onkeyup="globalSearch(this.value)">
-                    <span class="input-group-text bg-white"><i class="fa-solid fa-search"></i></span>
-                </div>
-            </div>
+            <button class="btn btn-outline-secondary d-none d-md-block" data-bs-toggle="modal" data-bs-target="#searchModal" onclick="setTimeout(()=>document.getElementById('search-input-modal').focus(), 100)">
+                <i class="fa-solid fa-magnifying-glass me-2"></i> <span data-i18n="search_global">البحث السريع (Ctrl+K)</span>
+            </button>
              
             <div class="d-flex align-items-center gap-3">
                 <img src="https://ui-avatars.com/api/?name=AD&background=059669&color=fff&size=32" class="rounded-circle" width="32">
@@ -187,7 +193,6 @@
                     <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-danger"><p class="text-muted small mb-1" data-i18n="cogs_value">إجمالي تكلفة المبيعات (COGS)</p><h3 class="fw-bold text-danger" id="d-cogs-value">0</h3></div></div>
                     <div class="col-md-3"><div class="card-box h-100 border-start border-4 border-info"><p class="text-muted small mb-1" data-i18n="gross_margin">هامش الربح الإجمالي</p><h3 class="fw-bold text-info" id="d-margin-value">0</h3></div></div>
                 </div>
-
                 <div class="row g-4">
                     <div class="col-lg-8"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="movement_chart">حركة الوارد والصادر (آخر 7 أيام)</h5><canvas id="movementChart" style="max-height: 350px;"></canvas></div></div>
                     <div class="col-lg-4"><div class="card-box h-100"><h5 class="fw-bold mb-4" data-i18n="stock_health">حالة المخزون (بالكمية)</h5><canvas id="stockHealthChart" style="max-height: 350px;"></canvas></div></div>
@@ -273,6 +278,25 @@
         <div class="modal fade" id="itemModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">إضافة صنف</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="itemForm"><div class="mb-3"><label>اسم الصنف</label><input type="text" id="m_name" class="form-control" required></div><div class="mb-3"><label>SKU</label><input type="text" id="m_sku" class="form-control" required></div><div class="row"><div class="col-6"><label>التكلفة</label><input type="number" id="m_cost" class="form-control" required></div><div class="col-6"><label>البيع</label><input type="number" id="m_price" class="form-control"></div></div><div class="mt-3"><label>الحد الأدنى</label><input type="number" id="m_min" class="form-control" value="5"></div><div class="mt-3"><button type="submit" class="btn btn-primary w-100" style="background-color: var(--primary); border-color: var(--primary);">حفظ</button></div></form></div></div></div></div>
 
     </div>
+    
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content search-modal-content border-0 shadow-lg">
+                <div class="modal-body p-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-0 py-4"><i class="fa-solid fa-magnifying-glass fa-xl text-primary"></i></span>
+                        <input type="text" class="form-control search-modal-input" id="search-input-modal" placeholder="ابحث عن صنف، رقم فاتورة، مرجع أو اسم مورد/عميل...">
+                        <button type="button" class="btn btn-outline-secondary border-0" data-bs-dismiss="modal">إغلاق (Esc)</button>
+                    </div>
+                    
+                    <div class="search-results-box mt-3" id="search-results-output">
+                        <p class="text-muted text-center mt-3">ابدأ بالكتابة للبحث في جميع السجلات (الأصناف، الوارد، الصادر).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -280,13 +304,13 @@
         // --- Configuration & Translations ---
         const i18n = {
             ar: {
-                app_title: "Nexus ERP", welcome_motto: "إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية", welcome_btn: "البدء وتسجيل الدخول", login_title: "تسجيل الدخول", login_welcome: "يرجى إدخال بيانات الوصول", login_btn: "دخول لوحة القيادة",
+                app_title: "Nexus ERP", welcome_motto: "إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية", welcome_btn: "البدء وتسجيل الدخول", login_title: "تسجيل الدخول", login_welcome: "يرجى إدخال بيانات الوصول", login_btn: "دخول لوحة القيادة", search_global: "البحث السريع (Ctrl+K)",
                 menu_dash: "لوحة القيادة", menu_items: "4. إدارة الأصناف", menu_in: "1. إدخال (وارد)", menu_out: "2. إخراج (صرف)", menu_stock: "3. المخزون اليومي", menu_audit: "5. الجرد الشهري", menu_reports: "6. التقارير", menu_docs: "7. المستندات", menu_settings: "الإعدادات", menu_help: "التعليمات", menu_about: "من نحن", logout: "خروج",
                 kpi_title: "المؤشرات المالية والمخزنية الرئيسية", stock_value: "قيمة المخزون الإجمالية", sales_value: "إجمالي قيمة المبيعات", cogs_value: "إجمالي تكلفة المبيعات (COGS)", gross_margin: "هامش الربح الإجمالي",
                 movement_chart: "حركة الوارد والصادر (آخر 7 أيام)", stock_health: "حالة المخزون (بالكمية)", about_title: "عن نظام Nexus ERP"
             },
             en: {
-                app_title: "Nexus ERP", welcome_motto: "Integrated Inventory and Accounting Management with a Modern Touch", welcome_btn: "Get Started & Login", login_title: "Login", login_welcome: "Please enter your access details", login_btn: "Access Dashboard",
+                app_title: "Nexus ERP", welcome_motto: "Integrated Inventory and Accounting Management with a Modern Touch", welcome_btn: "Get Started & Login", login_title: "Login", login_welcome: "Please enter your access details", login_btn: "Access Dashboard", search_global: "Quick Search (Ctrl+K)",
                 menu_dash: "Dashboard", menu_items: "4. Item Management", menu_in: "1. Inbound", menu_out: "2. Outbound", menu_stock: "3. Daily Stock", menu_audit: "5. Monthly Audit", menu_reports: "6. Reports", menu_docs: "7. Documents", menu_settings: "Settings", menu_help: "Instructions", menu_about: "About Us", logout: "Logout",
                 kpi_title: "Key Financial and Inventory Indicators", stock_value: "Total Inventory Value", sales_value: "Total Sales Value", cogs_value: "Total COGS", gross_margin: "Gross Margin",
                 movement_chart: "Inbound/Outbound Movement (Last 7 Days)", stock_health: "Stock Health (By Quantity)", about_title: "About Nexus ERP System"
@@ -402,8 +426,8 @@
             // 1. Movement Chart (Line)
             const ctxMovement = document.getElementById('movementChart').getContext('2d');
             const gradient = ctxMovement.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); 
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            gradient.addColorStop(0, 'rgba(5, 150, 105, 0.4)'); // Primary
+            gradient.addColorStop(1, 'rgba(5, 150, 105, 0)');
             
             if(chartInstances.movement) chartInstances.movement.destroy();
             chartInstances.movement = new Chart(ctxMovement, {
@@ -413,7 +437,7 @@
                     datasets: [{
                         label: 'وارد',
                         data: dummyData.map(d => d * 1.5),
-                        borderColor: '#3b82f6',
+                        borderColor: '#059669',
                         backgroundColor: gradient,
                         fill: true, tension: 0.4, pointRadius: 3
                     }, {
@@ -513,7 +537,6 @@
         function handleTransSubmit(e, type) {
              Swal.fire({ icon: 'success', title: 'تم تسجيل العملية', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
              e.target.reset();
-             // Add dummy item/transaction for visualization
              if(db.items.length === 0) {
                  db.items.push({ id: 101, sku: "123456", name: "صنف تجريبي", unit: "قطعة", cost: 10, price: 15, min: 5, loc: "A-01", note: "", stock: 100 });
              }
@@ -525,9 +548,53 @@
              localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
              renderAll();
         }
+        
+        // --- Search Logic ---
+        document.getElementById('search-input-modal').addEventListener('keyup', liveSearch);
+        
+        function liveSearch() {
+            const query = document.getElementById('search-input-modal').value.toLowerCase();
+            const resultsDiv = document.getElementById('search-results-output');
+            let html = '';
+            
+            if (query.length < 2) {
+                resultsDiv.innerHTML = '<p class="text-muted text-center mt-3">ابدأ بالكتابة للبحث في جميع السجلات (الأصناف، الوارد، الصادر).</p>';
+                return;
+            }
 
-        function globalSearch(val) {
-            // Placeholder for search logic
+            // 1. Item Results
+            const itemResults = db.items.filter(i => 
+                i.name.toLowerCase().includes(query) || i.sku.toLowerCase().includes(query)
+            );
+            if (itemResults.length) {
+                html += `<h6><i class="fa-solid fa-box-open me-2 text-primary"></i> نتائج الأصناف (${itemResults.length})</h6><ul class="list-group mb-3">`;
+                itemResults.forEach(i => {
+                    html += `<li class="list-group-item d-flex justify-content-between align-items-center">${i.name} (${i.sku})<span class="badge bg-secondary">${i.stock}</span></li>`;
+                });
+                html += `</ul>`;
+            }
+
+            // 2. Transaction Results
+            const transResults = db.trans.filter(t => 
+                t.ref.toLowerCase().includes(query) || t.itemName.toLowerCase().includes(query) || t.party.toLowerCase().includes(query)
+            ).slice(0, 10);
+            if (transResults.length) {
+                html += `<h6><i class="fa-solid fa-right-left me-2 text-primary"></i> نتائج الحركات (${transResults.length})</h6><ul class="list-group">`;
+                transResults.forEach(t => {
+                    const badgeClass = t.type === 'in' ? 'bg-success' : 'bg-warning text-dark';
+                    html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${t.itemName} - ${t.party}
+                        <span class="badge ${badgeClass}">${t.type === 'in' ? 'وارد' : 'صادر'} (${t.qty})</span>
+                    </li>`;
+                });
+                html += `</ul>`;
+            }
+
+            if (!html) {
+                resultsDiv.innerHTML = `<p class="text-danger text-center mt-3">لا توجد نتائج مطابقة لـ "${query}".</p>`;
+            } else {
+                resultsDiv.innerHTML = html;
+            }
         }
     </script>
 </body>
