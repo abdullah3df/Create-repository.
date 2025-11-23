@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus ERP | Ultimate Edition</title>
+    <title>Nexus ERP | Fusion Edition</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,15 +14,17 @@
 
     <style>
         :root {
-            --primary: #06b6d4; /* Cyan/Teal - Elegant */
-            --primary-dark: #0e7490;
-            --primary-light: #ccfbf1;
+            /* New Elegant Palette */
+            --primary: #3b82f6; /* Elegant Indigo Blue */
+            --primary-dark: #1e40af;
+            --primary-light: #eff6ff;
+            --accent-gold: #f59e0b; /* Secondary accent color */
             --secondary: #64748b;
-            --bg-body: #f8fafc;
+            --bg-body: #f9fafb; /* Lighter background */
             --bg-card: #ffffff;
             --sidebar-width: 260px;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --border-color: #e2e8f0;
+            --border-color: #e5e7eb;
         }
 
         [data-theme="dark"] {
@@ -41,22 +43,44 @@
             overflow-x: hidden;
         }
         html[dir="ltr"] body { font-family: 'Inter', sans-serif; }
-
-        /* --- Global Structure --- */
-        .auth-screen { 
-            position: fixed; inset: 0; z-index: 9999; 
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
-            display: flex; align-items: center; justify-content: center;
+        
+        /* --- Fusion Header Styling --- */
+        .header-fusion {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 32px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 900;
         }
-        .auth-box { 
-            background: var(--bg-card); padding: 40px; border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 400px; 
-            color: #334155; /* Ensure text is visible in light mode */
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            flex-shrink: 0;
         }
         
-        /* Welcome Screen Specific */
-        #welcome-screen { z-index: 9999; }
-        #login-screen { z-index: 9998; display: none; }
+        .header-logo i {
+             /* New simple elegant icon style */
+            background: var(--primary);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .search-container-fusion {
+            flex-grow: 1;
+            max-width: 500px;
+            margin-inline-start: 40px;
+        }
 
         /* --- Sidebar --- */
         .sidebar { 
@@ -65,38 +89,40 @@
             border-left: 1px solid var(--border-color); z-index: 1000; padding: 20px; 
             transition: all 0.3s; 
         }
-        html[dir="ltr"] .sidebar { right: auto; left: 0; border-left: none; border-right: 1px solid var(--border-color); }
-        .brand { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 30px; }
-        .nav-link { color: var(--secondary); font-weight: 500; border-radius: 8px; margin-bottom: 4px; transition: 0.2s; padding: 10px 15px; }
-        .nav-link:hover, .nav-link.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
 
-        /* --- Main Content --- */
-        .main-content { margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; }
-        html[dir="ltr"] .main-content { margin-right: 0; margin-left: var(--sidebar-width); }
-
-        /* Mobile Adjustments for Sidebar */
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.active { transform: translateX(0); box-shadow: 0 0 0 1000px rgba(0,0,0,0.5); }
-            .main-content { margin-right: 0; padding: 15px; }
-            html[dir="ltr"] .sidebar { transform: translateX(-100%); }
-            html[dir="ltr"] .sidebar.active { transform: translateX(0); }
+        /* Nav Links - Professional Icons */
+        .nav-link i {
+            /* Consistent professional icon color */
+            color: var(--secondary);
+            width: 20px;
+        }
+        .nav-link.active i {
+            color: var(--primary);
         }
 
-        /* --- Cards & Components --- */
-        .card-box { background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 20px; }
-        .stat-icon-box { background-color: var(--primary-light); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .table-custom th { font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); background: var(--bg-body); }
+        /* Main Content Adjusts for new fixed Header */
+        .main-content { margin-right: var(--sidebar-width); padding: 32px; transition: 0.3s; min-height: 100vh; padding-top: 20px; }
+        html[dir="ltr"] .main-content { margin-right: 0; margin-left: var(--sidebar-width); }
+        
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-right: 0; padding: 15px; }
+            .header-fusion { padding: 10px 15px; }
+            .search-container-fusion { display: none; /* Hide complex search on mobile */ }
+        }
+
+        /* Placeholder sections (Retained for structure) */
         .section { display: none; animation: fadeInUp 0.5s; }
         .section.active { display: block; }
-        .barcode-input { border: 2px solid var(--primary); box-shadow: 0 0 5px rgba(6, 182, 212, 0.5); }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen" class="auth-screen">
         <div class="auth-box text-center animate__animated animate__fadeIn">
-            <i class="fa-solid fa-layer-group fa-4x mb-3" style="color:var(--primary)"></i>
+            <i class="fa-solid fa-gem fa-4x mb-3" style="color:var(--primary)"></i>
             <h1 class="fw-bold mb-3" data-i18n="app_title">Nexus ERP</h1>
             <p class="lead text-muted mb-4" data-i18n="welcome_motto">إدارة متكاملة للمخزون والمحاسبة بلمسة عصرية</p>
             <button onclick="showLogin()" class="btn btn-primary w-100 py-2 fw-bold animate__animated animate__pulse animate__infinite" data-i18n="welcome_btn">البدء وتسجيل الدخول</button>
@@ -121,6 +147,27 @@
 
     <div id="app-interface" style="display: none;">
         
+        <div class="header-fusion no-print">
+            <div class="d-flex align-items-center gap-3">
+                 <button class="btn btn-light d-md-none shadow-sm" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                 <div class="header-logo">
+                    <i class="fa-solid fa-bezier-curve"></i>
+                    <span>Nexus ERP</span>
+                </div>
+            </div>
+            
+            <div class="search-container-fusion">
+                <div class="input-group shadow-sm">
+                    <input type="text" class="form-control" placeholder="بحث عام (منتجات/مرجع)" onkeyup="globalSearch(this.value)">
+                    <span class="input-group-text bg-white"><i class="fa-solid fa-search"></i></span>
+                </div>
+            </div>
+             
+            <div class="d-flex align-items-center gap-3">
+                <img src="https://ui-avatars.com/api/?name=AD&background=3b82f6&color=fff&size=32" class="rounded-circle" width="32">
+            </div>
+        </div>
+
         <aside class="sidebar" id="sidebar">
             <div class="brand"><i class="fa-solid fa-gem"></i> Nexus ERP</div>
             <nav class="flex-grow-1">
@@ -142,16 +189,7 @@
         </aside>
 
         <main class="main-content">
-            <header class="d-flex justify-content-between align-items-center mb-5 border-bottom pb-3 no-print">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-light d-md-none shadow-sm" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-                    <h4 class="fw-bold m-0" id="current-title" style="color:var(--primary)">لوحة القيادة</h4>
-                </div>
-                <div class="input-group shadow-sm" style="max-width: 300px;">
-                    <input type="text" class="form-control" placeholder="بحث عام (منتجات/مرجع)" onkeyup="globalSearch(this.value)">
-                    <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
-                </div>
-            </header>
+            <h4 class="fw-bold m-0 mb-4" id="current-title" style="color:var(--primary)">لوحة القيادة</h4>
 
             <section id="dashboard" class="section active">
                 <h5 class="fw-bold mb-4" data-i18n="kpi_title">المؤشرات المالية والمخزنية الرئيسية</h5>
@@ -336,7 +374,9 @@
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             if(element) element.classList.add('active');
             
-            document.getElementById('current-title').innerText = element ? element.querySelector('span').innerText : id;
+            // Update Title
+            const titleElement = element ? element.querySelector('span') : null;
+            document.getElementById('current-title').innerText = titleElement ? titleElement.innerText : id;
 
             // FIX: Close sidebar on mobile after navigation
             if(window.innerWidth < 768) {
@@ -351,14 +391,16 @@
         function applySettings(s) {
             document.documentElement.lang = s.lang;
             document.documentElement.dir = (s.lang === 'ar') ? 'rtl' : 'ltr';
-            const css = s.lang === 'ar' ? "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
+            const css = s.lang === 'ar' ? "https://cdn.jsdelivr.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" : "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css";
             document.getElementById('bootstrap-css').href = css;
             document.body.setAttribute('data-theme', s.dark ? 'dark' : 'light');
             
+            // Apply settings to controls
             document.getElementById('set_lang').value = s.lang;
             document.getElementById('set_curr').value = s.curr;
             document.getElementById('set_theme').checked = s.dark;
 
+            // Apply translations
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const k = el.getAttribute('data-i18n');
                 if(i18n[s.lang] && i18n[s.lang][k]) el.innerText = i18n[s.lang][k];
@@ -380,10 +422,10 @@
             // 1. Movement Chart (Line)
             const ctxMovement = document.getElementById('movementChart').getContext('2d');
             const gradient = ctxMovement.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
-            gradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // Primary Color
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
             
-            if(chartInstances.movement) chartInstances.movement.destroy(); // Destroy previous instance
+            if(chartInstances.movement) chartInstances.movement.destroy();
             chartInstances.movement = new Chart(ctxMovement, {
                 type: 'line',
                 data: {
@@ -391,14 +433,14 @@
                     datasets: [{
                         label: 'وارد',
                         data: dummyData.map(d => d * 1.5),
-                        borderColor: '#06b6d4',
+                        borderColor: '#3b82f6',
                         backgroundColor: gradient,
                         fill: true, tension: 0.4, pointRadius: 3
                     }, {
                         label: 'صادر',
                         data: dummyData,
-                        borderColor: '#f97316',
-                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        borderColor: '#f59e0b', // Accent Gold
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         tension: 0.4, pointRadius: 3
                     }]
                 },
@@ -411,7 +453,7 @@
             const highCount = db.items.filter(i => i.stock > (i.min * 2 || 10)).length;
             const medCount = db.items.length - lowCount - highCount;
 
-            if(chartInstances.stockHealth) chartInstances.stockHealth.destroy(); // Destroy previous instance
+            if(chartInstances.stockHealth) chartInstances.stockHealth.destroy();
             chartInstances.stockHealth = new Chart(ctxStock, {
                 type: 'doughnut',
                 data: {
@@ -459,7 +501,7 @@
             document.getElementById(type+'_total').value = (qty * price).toFixed(2) + ' ' + currency;
         }
 
-        // --- Renderers ---
+        // --- Renderers (Stats & KPIs) ---
         function renderAll() {
             // Render select options
             const opts = '<option value="">اختر...</option>' + db.items.map(i => `<option value="${i.id}">${i.name}</option>`).join('');
@@ -486,14 +528,14 @@
             if(document.getElementById('dashboard').classList.contains('active')) initCharts();
         }
 
-        // --- Dummy Transaction Handlers for UI Flow ---
+        // --- Transaction Handlers ---
         document.getElementById('inForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'in'); });
         document.getElementById('outForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'out'); });
         
         function handleTransSubmit(e, type) {
              Swal.fire({ icon: 'success', title: 'تم تسجيل العملية', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
              e.target.reset();
-             // Add dummy item to array to see the update
+             // Add a dummy transaction for visualization
              if(db.items.length === 0) {
                  db.items.push({ id: 101, sku: "123456", name: "صنف تجريبي", unit: "قطعة", cost: 10, price: 15, min: 5, loc: "A-01", note: "", stock: 100 });
              }
