@@ -339,6 +339,8 @@
                     <div class="col-md-6">
                         <div class="card-box">
                             <h4 class="fw-bold mb-4" data-i18n="menu_settings">الإعدادات والتخصيص</h4>
+                            
+                            <h6 class="fw-bold text-muted mt-4 mb-3"><i class="fa-solid fa-sliders me-2"></i> إعدادات العرض</h6>
                             <div class="mb-3"><label class="form-label fw-bold">لغة العرض / Language</label>
                                 <select class="form-select" id="set_lang" onchange="saveSettings()"><option value="ar">العربية</option><option value="en">English</option></select>
                             </div>
@@ -349,6 +351,20 @@
                                 <input class="form-check-input" type="checkbox" id="set_theme" onchange="saveSettings()">
                                 <label class="form-check-label fw-bold">تفعيل الوضع الليلي (Dark Mode)</label>
                             </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="fw-bold text-danger mb-3"><i class="fa-solid fa-database me-2"></i> النسخ الاحتياطي والاستيراد</h6>
+                            <p class="small text-muted">حفظ واستعادة البيانات المخزنة محلياً في متصفحك.</p>
+                            
+                            <button onclick="exportData()" class="btn btn-success w-100 mb-3">
+                                <i class="fa-solid fa-download me-2"></i> عمل نسخة احتياطية (تصدير JSON)
+                            </button>
+                            
+                            <label for="importFile" class="btn btn-outline-danger w-100">
+                                <i class="fa-solid fa-upload me-2"></i> استيراد واستعادة البيانات
+                            </label>
+                            <input type="file" id="importFile" class="d-none" accept=".json" onchange="handleImportFile(event)">
                         </div>
                     </div>
                 </div>
@@ -528,7 +544,16 @@
             
             try {
                 const stored = localStorage.getItem('nexus_ultimate_db');
-                if(stored) db = JSON.parse(stored);
+                // إذا لم يتم العثور على بيانات مخزنة، نستخدم البيانات الوهمية
+                if(stored) {
+                    const parsed = JSON.parse(stored);
+                    // تحقق بسيط من سلامة البيانات
+                    if (parsed && parsed.items && parsed.trans && parsed.settings) {
+                        db = parsed;
+                    } else {
+                        throw new Error("Corrupt data in localStorage");
+                    }
+                }
                 
                 applySettings(db.settings);
                 
@@ -601,6 +626,88 @@
             db.settings.dark = document.getElementById('set_theme').checked;
             localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
             location.reload();
+        }
+        
+        // --- 2. JAVASCRIPT EXPORT/IMPORT FUNCTIONS (جديد) ---
+
+        /**
+         * تصدير البيانات كملف JSON للنسخ الاحتياطي.
+         */
+        function exportData() {
+            try {
+                const dataStr = JSON.stringify(db, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `nexus_erp_backup_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                 Swal.fire({ icon: 'success', title: 'تم التصدير بنجاح!', text: 'تم حفظ نسخة احتياطية من بياناتك.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+
+            } catch (e) {
+                console.error("Export failed:", e);
+                Swal.fire({ icon: 'error', title: 'فشل التصدير', text: 'تعذر إنشاء ملف النسخ الاحتياطي.', toast: true, position: 'top-end', showConfirmButton: false, timer: 4000 });
+            }
+        }
+
+        /**
+         * معالجة ملف الاستيراد وبدء الاستيراد.
+         * @param {Event} event 
+         */
+        function handleImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                importData(fileContent);
+            };
+            reader.readAsText(file);
+        }
+
+        /**
+         * استيراد البيانات من ملف JSON واستبدال البيانات الحالية.
+         * @param {string} dataStr - محتوى ملف JSON.
+         */
+        function importData(dataStr) {
+            Swal.fire({
+                title: 'هل أنت متأكد من الاستيراد؟',
+                text: "الاستيراد سيستبدل جميع البيانات الحالية بشكل دائم.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'نعم، استبدل البيانات',
+                cancelButtonText: 'إلغاء',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const importedDb = JSON.parse(dataStr);
+                        
+                        // التحقق من صحة البنية الأساسية
+                        if (!importedDb.items || !importedDb.trans || !importedDb.settings) {
+                            throw new Error("ملف النسخ الاحتياطي غير صالح أو تالف.");
+                        }
+
+                        // حفظ البيانات المستوردة واستعادة التحميل
+                        localStorage.setItem('nexus_ultimate_db', JSON.stringify(importedDb));
+                        
+                        Swal.fire({ icon: 'success', title: 'تم الاستيراد بنجاح!', text: 'سيتم إعادة تحميل الصفحة لتطبيق البيانات الجديدة.', timer: 2500, showConfirmButton: false });
+                        setTimeout(() => location.reload(), 2500);
+
+                    } catch (e) {
+                        console.error("Import failure:", e);
+                        Swal.fire({ icon: 'error', title: 'فشل الاستيراد', text: e.message || 'تعذر تحليل ملف JSON. الرجاء التأكد من صحة الملف.', toast: false });
+                    }
+                }
+            });
         }
 
         // --- CHART LOGIC (Retained) ---
@@ -684,7 +791,7 @@
             }
         }
         
-        // --- WMS Logic ---
+        // --- WMS Logic (Retained) ---
         function handleBarcodeScan(sku) { 
              const item = db.items.find(i => i.sku.toUpperCase() === sku.toUpperCase());
              if (item) {
@@ -725,7 +832,7 @@
             document.getElementById(type+'_total').value = total.toLocaleString(db.settings.lang === 'ar' ? 'ar-SA' : 'en-US', { minimumFractionDigits: 2 });
         }
 
-        // --- RENDERERS ---
+        // --- RENDERERS (Retained) ---
         function renderAll() {
             try {
                 // Update Select Options
@@ -767,7 +874,7 @@
             }
         }
 
-        // --- Transaction Handlers ---
+        // --- Transaction Handlers (Retained) ---
         document.getElementById('inForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'in'); });
         document.getElementById('outForm').addEventListener('submit', e => { e.preventDefault(); handleTransSubmit(e, 'out'); });
         
@@ -815,7 +922,7 @@
              if(type === 'in') document.getElementById('barcode_scan').focus();
         }
 
-        // --- ITEM HANDLERS (إدارة الأصناف) ---
+        // --- ITEM HANDLERS (Retained) ---
         document.getElementById('itemForm').addEventListener('submit', handleItemSubmit);
 
         function handleItemSubmit(e) {
@@ -888,7 +995,7 @@
             container.innerHTML = html;
         }
         
-        // --- المخزون اليومي (تفعيل) ---
+        // --- المخزون اليومي (Retained) ---
         function renderStockTable() {
             const container = document.getElementById('stock-table-container');
             const currency = db.settings.curr;
@@ -926,12 +1033,11 @@
             container.innerHTML = html;
         }
         
-        // --- التقارير (تفعيل) ---
+        // --- التقارير (Retained) ---
         function renderReports() {
              const container = document.getElementById('reports').querySelector('.card-box');
              const currency = db.settings.curr;
              
-             // تقرير بسيط لحركة الشهر الحالي
              const currentMonth = new Date().toISOString().slice(0, 7);
              const monthTrans = db.trans.filter(t => t.date.startsWith(currentMonth));
              
@@ -974,7 +1080,7 @@
             container.innerHTML = html;
         }
         
-        // --- الجرد والمستندات (للمحاكاة) ---
+        // --- الجرد والمستندات (Retained) ---
         
         function renderAudit() {
              const container = document.getElementById('audit').querySelector('.card-box');
