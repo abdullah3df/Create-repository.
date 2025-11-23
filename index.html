@@ -299,13 +299,25 @@
 
             <section id="audit" class="section">
                 <div class="card-box">
-                    <h4 class="mb-4 text-primary">5. نموذج الجرد الشهري</h4>
-                    <div class="alert alert-info">
-                        هنا يتم إدخال الكميات الفعلية لجميع الأصناف ومطابقتها مع السجلات الدفترية. 
-                        <hr class="my-2">
-                        <p class="mb-0 small"><strong>حالة الجرد:</strong> لا توجد فروقات مسجلة للشهر الماضي. <i class="fa-solid fa-check text-success"></i></p>
-                    </div>
-                    <button class="btn btn-outline-secondary disabled">بدء عملية الجرد الآن</button>
+                    <h4 class="mb-4 text-primary">5. الجرد الشهري (Stock Take)</h4>
+                    <p class="text-muted small">يرجى إدخال الكميات الفعلية الموجودة في المستودع. سيقوم النظام بعرض الفروقات مقارنة بالدفاتر.</p>
+                    
+                    <form id="auditForm" onsubmit="handleAuditSubmit(event)">
+                        <div class="alert alert-warning py-2 small" id="audit-summary" style="display: none;">
+                            <i class="fa-solid fa-clipboard-check me-2"></i> 
+                            **نتائج الجرد:** تم رصد فروقات في <span id="diff-count">0</span> صنف.
+                        </div>
+                        
+                        <div id="audit-table-container">
+                            <p class="text-muted text-center py-5">جاري تحميل قائمة الجرد...</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-danger w-100 fw-bold">
+                                <i class="fa-solid fa-list-check me-2"></i> مقارنة الكميات المسجلة وإظهار الفروقات
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </section>
             
@@ -455,16 +467,16 @@
         
         // --- بيانات وهمية (Dummy Data) لعمل لوحة القيادة ---
         const DUMMY_ITEMS = [
-            { id: 101, sku: "A1001", name: "كمبيوتر محمول Core i7", cost: 2500, price: 3200, min: 5, stock: 12, loc: "RACK-A" },
-            { id: 102, sku: "A1002", name: "طابعة ليزر متعددة الوظائف", cost: 650, price: 899, min: 10, stock: 4, loc: "RACK-B" },
-            { id: 103, sku: "B2003", name: "شاشة عرض 27 بوصة 4K", cost: 1200, price: 1599, min: 8, stock: 25, loc: "RACK-C" },
-            { id: 104, sku: "B2004", name: "جهاز توجيه (Router) شبكي", cost: 150, price: 219, min: 20, stock: 18, loc: "RACK-A" },
-            { id: 105, sku: "C3005", name: "هاتف مكتبي VoIP", cost: 350, price: 550, min: 15, stock: 50, loc: "RACK-D" },
-            { id: 106, sku: "C3006", name: "مجموعة لوحة مفاتيح وماوس لاسلكية", cost: 80, price: 125, min: 30, stock: 85, loc: "RACK-B" },
-            { id: 107, sku: "D4007", name: "كابل شبكة CAT6 (100 متر)", cost: 40, price: 65, min: 50, stock: 250, loc: "RACK-E" },
-            { id: 108, sku: "D4008", name: "قرص صلب SSD 1TB", cost: 200, price: 299, min: 10, stock: 11, loc: "RACK-C" },
-            { id: 109, sku: "E5009", name: "بطارية احتياطية (UPS) 1500VA", cost: 900, price: 1300, min: 3, stock: 9, loc: "RACK-D" },
-            { id: 110, sku: "E5010", name: "كاميرا مراقبة خارجية HD", cost: 300, price: 450, min: 10, stock: 1, loc: "RACK-A" } 
+            { id: 101, sku: "A1001", name: "كمبيوتر محمول Core i7", cost: 2500, price: 3200, min: 5, stock: 12, loc: "RACK-A", note: "" },
+            { id: 102, sku: "A1002", name: "طابعة ليزر متعددة الوظائف", cost: 650, price: 899, min: 10, stock: 4, loc: "RACK-B", note: "" },
+            { id: 103, sku: "B2003", name: "شاشة عرض 27 بوصة 4K", cost: 1200, price: 1599, min: 8, stock: 25, loc: "RACK-C", note: "" },
+            { id: 104, sku: "B2004", name: "جهاز توجيه (Router) شبكي", cost: 150, price: 219, min: 20, stock: 18, loc: "RACK-A", note: "" },
+            { id: 105, sku: "C3005", name: "هاتف مكتبي VoIP", cost: 350, price: 550, min: 15, stock: 50, loc: "RACK-D", note: "" },
+            { id: 106, sku: "C3006", name: "مجموعة لوحة مفاتيح وماوس لاسلكية", cost: 80, price: 125, min: 30, stock: 85, loc: "RACK-B", note: "" },
+            { id: 107, sku: "D4007", name: "كابل شبكة CAT6 (100 متر)", cost: 40, price: 65, min: 50, stock: 250, loc: "RACK-E", note: "" },
+            { id: 108, sku: "D4008", name: "قرص صلب SSD 1TB", cost: 200, price: 299, min: 10, stock: 11, loc: "RACK-C", note: "" },
+            { id: 109, sku: "E5009", name: "بطارية احتياطية (UPS) 1500VA", cost: 900, price: 1300, min: 3, stock: 9, loc: "RACK-D", note: "" },
+            { id: 110, sku: "E5010", name: "كاميرا مراقبة خارجية HD", cost: 300, price: 450, min: 10, stock: 1, loc: "RACK-A", note: "" } 
         ];
         
         const DUMMY_TRANS = [
@@ -544,10 +556,8 @@
             
             try {
                 const stored = localStorage.getItem('nexus_ultimate_db');
-                // إذا لم يتم العثور على بيانات مخزنة، نستخدم البيانات الوهمية
                 if(stored) {
                     const parsed = JSON.parse(stored);
-                    // تحقق بسيط من سلامة البيانات
                     if (parsed && parsed.items && parsed.trans && parsed.settings) {
                         db = parsed;
                     } else {
@@ -628,7 +638,7 @@
             location.reload();
         }
         
-        // --- 2. JAVASCRIPT EXPORT/IMPORT FUNCTIONS (جديد) ---
+        // --- JAVASCRIPT EXPORT/IMPORT FUNCTIONS ---
 
         /**
          * تصدير البيانات كملف JSON للنسخ الاحتياطي.
@@ -1080,21 +1090,138 @@
             container.innerHTML = html;
         }
         
-        // --- الجرد والمستندات (Retained) ---
+        // --- الجرد الشهري (تفعيل) ---
         
         function renderAudit() {
-             const container = document.getElementById('audit').querySelector('.card-box');
-             container.innerHTML = `
-                <h4 class="mb-4 text-primary">5. نموذج الجرد الشهري</h4>
-                <div class="alert alert-info">
-                    هنا يتم إدخال الكميات الفعلية لجميع الأصناف ومطابقتها مع السجلات الدفترية. 
-                    <hr class="my-2">
-                    <p class="mb-0 small"><strong>حالة الجرد:</strong> لا توجد فروقات مسجلة للشهر الماضي. <i class="fa-solid fa-check text-success"></i></p>
-                </div>
-                <button class="btn btn-outline-secondary disabled">بدء عملية الجرد الآن</button>
-             `;
+            const container = document.getElementById('audit-table-container');
+            
+            if (db.items.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center py-5">لا توجد أصناف في النظام لإجراء الجرد.</p>';
+                return;
+            }
+            
+            let html = `
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped table-sm align-middle">
+                        <thead class="table-primary sticky-top">
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الصنف (SKU)</th>
+                                <th>الكمية المسجلة (الدفاتر)</th>
+                                <th>الكمية الفعلية (الإدخال)</th>
+                                <th>الفرق (فائض / نقص)</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+            
+            db.items.forEach((i, index) => {
+                html += `
+                    <tr data-item-id="${i.id}">
+                        <td>${index + 1}</td>
+                        <td>${i.name} <span class="badge bg-secondary">${i.sku}</span></td>
+                        <td>${i.stock}</td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm audit-qty" 
+                                   data-item-id="${i.id}" 
+                                   value="${i.stock}" 
+                                   min="0" 
+                                   style="width: 100px; display: inline-block;"
+                                   required>
+                        </td>
+                        <td class="diff-output" data-item-id="${i.id}">--</td>
+                    </tr>`;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+            
+            document.getElementById('audit-summary').style.display = 'none';
         }
 
+        function handleAuditSubmit(e) {
+            e.preventDefault();
+            
+            let differencesCount = 0;
+            const itemsWithDifference = [];
+
+            document.querySelectorAll('#auditForm .audit-qty').forEach(input => {
+                const itemId = parseInt(input.getAttribute('data-item-id'));
+                const actualQty = parseInt(input.value) || 0;
+                const item = db.items.find(i => i.id === itemId);
+                
+                if (item) {
+                    const recordedQty = item.stock;
+                    const difference = actualQty - recordedQty;
+                    const outputCell = document.querySelector(`#auditForm .diff-output[data-item-id="${itemId}"]`);
+                    const row = input.closest('tr');
+
+                    if (difference !== 0) {
+                        differencesCount++;
+                        const diffText = difference > 0 ? `+${difference} (فائض)` : `${difference} (نقص)`;
+                        outputCell.innerHTML = `<span class="fw-bold ${difference > 0 ? 'text-success' : 'text-danger'}">${diffText}</span>`;
+                        row.classList.add(difference > 0 ? 'table-success' : 'table-danger');
+                        itemsWithDifference.push({ itemId, recordedQty, actualQty, difference });
+                    } else {
+                        outputCell.innerHTML = `<span class="text-muted">لا فرق</span>`;
+                        row.classList.remove('table-success', 'table-danger');
+                    }
+                }
+            });
+
+            // تحديث ملخص الجرد
+            const summary = document.getElementById('audit-summary');
+            document.getElementById('diff-count').innerText = differencesCount;
+            summary.style.display = 'block';
+
+            if (differencesCount > 0) {
+                Swal.fire({
+                    title: `تم رصد ${differencesCount} فرق!`,
+                    text: 'هل تود تعديل المخزون المسجل ليطابق الكميات الفعلية الآن؟',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'نعم، تعديل المخزون',
+                    cancelButtonText: 'لا، فقط أظهر الفروقات'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        applyAuditDifferences(itemsWithDifference);
+                    }
+                });
+            } else {
+                Swal.fire({ icon: 'success', title: 'نتائج ممتازة!', text: 'لا توجد أي فروقات بين الكميات المسجلة والكميات الفعلية.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+            }
+        }
+
+        function applyAuditDifferences(differences) {
+            differences.forEach(diff => {
+                const item = db.items.find(i => i.id === diff.itemId);
+                if (item) {
+                    item.stock = diff.actualQty; 
+                    
+                    db.trans.push({ 
+                        id: Date.now() + diff.itemId, 
+                        type: 'audit', 
+                        date: new Date().toISOString().split('T')[0], 
+                        ref: 'AUDIT-' + Math.floor(Date.now() / 1000), 
+                        party: 'System Adjustment', 
+                        itemId: item.id, 
+                        itemName: item.name, 
+                        qty: diff.difference,
+                        price: item.cost, 
+                        total: Math.abs(diff.difference * item.cost),
+                        notes: `تعديل جرد: ${diff.difference > 0 ? 'فائض' : 'نقص'} بمقدار ${Math.abs(diff.difference)}`
+                    });
+                }
+            });
+
+            localStorage.setItem('nexus_ultimate_db', JSON.stringify(db));
+            renderAll();
+            renderAudit(); 
+
+            Swal.fire({ icon: 'success', title: 'تم التعديل', text: 'تم تحديث المخزون المسجل ليطابق الجرد الفعلي.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+        }
+        
+        // --- المستندات (Retained) ---
+        
         function renderDocs() {
              const container = document.getElementById('docs').querySelector('.card-box');
              container.innerHTML = `
